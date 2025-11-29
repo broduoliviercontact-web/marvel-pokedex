@@ -1,0 +1,118 @@
+:root {
+  /* Palette Marvel */
+  --marvel-red: #e62429;
+  --marvel-dark: #050711;
+  --marvel-panel: #131624;
+  --marvel-border: rgba(255, 255, 255, 0.16);
+  --marvel-text: #f5f5f7;
+  --marvel-muted: #9ca3af;
+  --marvel-highlight-blue: #646cff;
+ --marvel-bg-image: url("/backgrounds/marvel-bg-2.jpg");
+
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: dark;
+  color: var(--marvel-text);
+  background-color: var(--marvel-dark);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+
+  background-image:
+    linear-gradient(
+      rgba(5, 7, 17, 0.60),
+      rgba(5, 7, 17, 0.60)
+    ),
+    var(--marvel-bg-image);
+
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+
+  color: var(--marvel-text);
+  display: flex;
+  justify-content: center;
+}
+body.bg-home {
+  --marvel-bg-image: url("/backgrounds/marvel-bg-2.jpg");
+}
+/* Characters = marvel-bg-1 */
+body.bg-characters {
+  --marvel-bg-image: url("/backgrounds/marvel-bg-1.png");
+}
+
+body.bg-comics {
+  --marvel-bg-image: url("/backgrounds/marvel-bg-3.jpg");
+}
+/* conteneur principal de l'app */
+#root {
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 16px 40px;
+}
+
+/* liens génériques */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* pour que inputs / boutons utilisent la même police */
+button,
+input,
+select {
+  font: inherit;
+}
+
+/* petits helpers typographiques */
+.text-muted {
+  color: var(--marvel-muted);
+}
+
+.text-accent {
+  color: var(--marvel-red);
+}
+
+/* panels génériques (si besoin pour d'autres composants) */
+.panel {
+  background: radial-gradient(
+      circle at top left,
+      rgba(255, 255, 255, 0.06),
+      transparent 55%
+    ),
+    rgba(6, 9, 22, 0.9);
+  border-radius: 12px;
+  border: 1px solid var(--marvel-border);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.7);
+  padding: 16px;
+}
+
+/* --- Variantes de background (optionnel) ---
+   Tu pourras changer la classe sur <body> plus tard */
+
+body.bg-covers-1 {
+  --marvel-bg-image: url("/backgrounds/marvel-bg-1.jpg");
+}
+
+body.bg-covers-2 {
+  --marvel-bg-image: url("/backgrounds/marvel-bg-2.jpg");
+}
+
+body.bg-ironman {
+  --marvel-bg-image: url("/backgrounds/marvel-bg-3.jpg");
+}

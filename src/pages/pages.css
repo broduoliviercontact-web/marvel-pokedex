@@ -1,0 +1,567 @@
+/* ===========================
+   Layout général des pages
+   =========================== */
+
+.page-main {
+  padding: 20px 0;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.results-title {
+  margin: 0 0 12px 0;
+  color: #ffffff;
+  font-size: 1.1rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* ===========================
+   Grille de cartes
+   =========================== */
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 30px;
+  perspective: 1200px;
+}
+
+/* wrapper d'une card (article) */
+.card {
+  background: transparent;
+  padding: 0;
+  border-radius: 10px;
+  min-height: 0;
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+/* titre et description génériques */
+.card-title {
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  text-align: center;
+  color: #f9fafb;
+
+  /* petit glow pour le côté carte */
+  text-shadow:
+    0 0 2px rgba(0, 0, 0, 0.8),
+    0 0 10px rgba(15, 23, 42, 0.85);
+}
+
+.card-title-back {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-align: center;
+
+  /* effet texte holo/or */
+  background-image: linear-gradient(
+    90deg,
+    #fbbf24,
+    #f97316,
+    #facc15,
+    #f97316,
+    #fbbf24
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+
+  text-shadow: 0 0 8px rgba(15, 23, 42, 0.8);
+}
+
+.card-desc {
+  margin: 0;
+  color: rgba(245, 245, 247, 0.86);
+  font-size: 0.9rem;
+}
+
+/* messages */
+.loading,
+.error,
+.empty {
+  padding: 12px 0;
+  text-align: center;
+}
+
+/* ===========================
+   CARDS 3D (tilt-card)
+   =========================== */
+
+.tilt-card {
+  width: 100%;
+  height: 360px;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.4s ease-in-out, box-shadow 0.3s ease,
+    background-color 0.3s ease;
+  cursor: pointer;
+  border-radius: 10px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+
+.tilt-card:hover {
+  transform: scale(1.05) rotateX(10deg) rotateY(10deg);
+  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.55);
+}
+
+/* faces avant / arrière */
+
+.tilt-card-front,
+.tilt-card-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: 10px;
+  color: #fff;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  overflow: hidden;
+}
+
+/* ========= FACE FRONT =========
+   visible au repos
+   =============================== */
+
+.tilt-card-front {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 12px;
+  transform: rotateY(0deg); /* visible par défaut */
+}
+
+/* pas de description sur la face front */
+.tilt-card-front .card-desc {
+  display: none;
+}
+
+/* ========= FACE BACK =========
+   visible au hover
+   ============================= */
+
+.tilt-card-back {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 16px;
+  background: radial-gradient(
+      circle at top left,
+      rgba(255, 255, 255, 0.07),
+      transparent 55%
+    ),
+    rgba(3, 9, 25, 0.96);
+  transform: rotateY(180deg); /* cachée au départ */
+}
+
+.tilt-card-back .card-title {
+  margin-bottom: 6px;
+}
+
+.tilt-card-back .card-desc {
+  display: block;
+  text-align: left;
+}
+
+/* flip au survol : on montre la back */
+.tilt-card:hover .tilt-card-front {
+  transform: rotateY(180deg);
+}
+
+.tilt-card:hover .tilt-card-back {
+  transform: rotateY(360deg);
+}
+
+/* ===========================
+   Découverte du jour
+   =========================== */
+
+.daily-discovery {
+  margin-top: 40px;
+  margin-bottom: 20px;
+}
+
+/* on centre la card et on lui donne une largeur fixe */
+.daily-card-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.daily-card-wrapper .card {
+  width: 100%;
+  max-width: 280px;
+}
+
+/* random-card : pas de padding supplémentaire */
+.random-card {
+  background: transparent;
+  padding: 0;
+}
+
+/* bouton Random / Réessayer */
+.random-button {
+  margin-top: 12px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: #b22424;
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition:
+    background-color 0.3s,
+    opacity 0.3s,
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+
+.random-button:hover {
+  opacity: 0.95;
+  background-color: #800101;
+  box-shadow: 0 0 10px rgba(100, 108, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+/* ===========================
+   Overlay de détail (card en grand)
+   =========================== */
+
+.detail-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background:
+    radial-gradient(circle at top, rgba(230, 36, 41, 0.35), transparent 55%),
+    rgba(3, 7, 18, 0.94);
+  backdrop-filter: blur(12px);
+}
+
+.detail-overlay-inner {
+  position: relative;
+  width: min(900px, 100%);
+  max-height: 85vh;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(248, 250, 252, 0.06), transparent 55%),
+    linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(30, 64, 175, 0.85));
+  border-radius: 18px;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9);
+  overflow: hidden;
+  animation: detail-zoom-in 0.28s ease-out;
+}
+
+/* Layout : CARTE EN HAUT, TEXTE EN BAS */
+.detail-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 24px 24px 28px;
+}
+
+.detail-media {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.detail-content {
+  flex: 0 0 auto;
+  width: 100%;
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: center;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.detail-meta {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: rgba(148, 163, 184, 0.9);
+}
+
+.detail-title {
+  margin: 0;
+  font-size: 1.6rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.detail-desc {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(226, 232, 240, 0.96);
+  white-space: pre-wrap;
+}
+
+.detail-close {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  border: none;
+  background: rgba(15, 23, 42, 0.95);
+  color: #ffffff;
+  border-radius: 999px;
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.25rem;
+  line-height: 1;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+}
+
+.detail-close:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.8);
+}
+
+/* Anim zoom */
+
+@keyframes detail-zoom-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .detail-layout {
+    padding: 20px 16px 24px;
+  }
+}
+
+/* ===========================
+   Carte Pokémon (image)
+   =========================== */
+
+.pokemon-card-wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.pokemon-card {
+  --shine-x: 50%;
+  --shine-y: 0%;
+
+  --border-radius: 4.5% / 3.5%;
+  position: relative;
+  width: clamp(260px, 32vw, 380px); /* grande carte (overlay) */
+  aspect-ratio: 63 / 88;
+  border-radius: var(--border-radius);
+  padding: 10px;
+  background:
+    radial-gradient(circle at 0% 0%, #fff7cc, #ffb300 35%, #6d4c41 100%);
+  box-shadow:
+    0 18px 35px rgba(0, 0, 0, 0.75),
+    0 0 0 1px rgba(0, 0, 0, 0.8);
+  overflow: hidden;
+  cursor: pointer;
+}
+
+/* Holo qui suit la souris */
+.pokemon-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image:
+    linear-gradient(
+      125deg,
+      rgba(255, 255, 255, 0.9) 0%,
+      rgba(255, 255, 255, 0) 30%,
+      rgba(255, 255, 255, 0.7) 50%,
+      rgba(255, 255, 255, 0) 70%,
+      rgba(255, 255, 255, 0.9) 100%
+    ),
+    conic-gradient(
+      from 0deg,
+      #ff9a9e,
+      #fad0c4,
+      #f6d365,
+      #96fbc4,
+      #a1c4fd,
+      #c2e9fb,
+      #ff9a9e
+    );
+  mix-blend-mode: screen;
+  opacity: 0.55;
+  pointer-events: none;
+  background-position: var(--shine-x) var(--shine-y), center;
+  background-size: 220% 220%, 180% 180%;
+  transition: opacity 0.15s ease;
+}
+
+.pokemon-card:hover::before {
+  opacity: 0.9;
+}
+
+.pokemon-card-inner {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  border-radius: 12px;
+  background:
+    radial-gradient(circle at 50% 0%, #1f2937, #020617 70%);
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pokemon-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow:
+    0 0 0 2px rgba(0, 0, 0, 0.85),
+    0 0 10px rgba(15, 23, 42, 0.9);
+}
+
+/* ===========================
+   Variante "mini" pour les cards du grid
+   =========================== */
+
+.pokemon-card--small {
+  width: 100%;
+  max-width: 220px;
+  margin: 0 auto;
+  padding: 6px;
+  box-shadow:
+    0 10px 20px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(0, 0, 0, 0.7);
+}
+
+.pokemon-card--small .pokemon-card-inner {
+  padding: 4px;
+}
+
+.pokemon-card--small .pokemon-card-img {
+  border-radius: 8px;
+}
+
+/* ===========================
+   Variante Holo (Simey) pour la grande carte
+   =========================== */
+
+/* on applique cette variante seulement si on ajoute la classe
+   .pokemon-card--holo sur la carte */
+.pokemon-card--holo {
+  --holo-color1: #00e7ff;
+  --holo-color2: #ff00e7;
+
+  position: relative;
+  isolation: isolate;
+  border-radius: 5% / 3.5%;
+
+  box-shadow:
+    -5px -5px 5px -5px var(--holo-color1),
+    5px 5px 5px -5px var(--holo-color2),
+    0 35px 30px -20px rgba(0, 0, 0, 0.7);
+
+  /* ➜ Effet 3D */
+  transform: perspective(900px)
+    rotateX(var(--tilt-x, 0deg))
+    rotateY(var(--tilt-y, 0deg));
+  transition: transform 0.12s ease-out;
+}
+
+/* on laisse l'image faire le "fond" et on se contente
+   d'ajouter des couches par-dessus */
+.pokemon-card--holo .pokemon-card-inner {
+  background: #040712;
+  padding: 0;
+}
+
+.pokemon-card--holo .pokemon-card-img {
+  border-radius: 5% / 3.5%;
+}
+
+/* couches holo inspirées de simeydotme */
+.pokemon-card--holo::before,
+.pokemon-card--holo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  mix-blend-mode: color-dodge;
+  opacity: 0.55;
+  transition: all 0.33s ease;
+  z-index: 2;
+}
+
+/* grand balayage de couleurs */
+.pokemon-card--holo::before {
+  background-image: linear-gradient(
+    115deg,
+    transparent 0%,
+    rgba(0, 231, 255, 0.6) 25%,
+    transparent 47%,
+    transparent 53%,
+    rgba(255, 0, 231, 0.6) 75%,
+    transparent 100%
+  );
+  background-size: 300% 300%;
+  background-position: 50% 50%;
+  filter: brightness(0.9) contrast(1.2);
+}
+
+/* sparkles + texture holo + dégradé arc-en-ciel */
+.pokemon-card--holo::after {
+  background-image:
+    url("https://assets.codepen.io/13471/sparkles.gif"),
+    url("https://assets.codepen.io/13471/holo.png"),
+    linear-gradient(
+      125deg,
+      #ff008450 15%,
+      #fca40040 30%,
+      #ffff0030 40%,
+      #00ff8a20 60%,
+      #00cfff40 70%,
+      #cc4cfa50 85%
+    );
+  background-size: 160%;
+  background-position: 50% 50%;
+  opacity: 0.4;
+  filter: brightness(0.9) contrast(1.1);
+}
+
+/* on booste l’effet au hover */
+.pokemon-card--holo:hover::before,
+.pokemon-card--holo:hover::after {
+  opacity: 1;
+  filter: brightness(0.3) contrast(1.3);
+}
