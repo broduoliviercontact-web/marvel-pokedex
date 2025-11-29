@@ -205,7 +205,7 @@ const handlePokemonMouseLeave = (event) => {
 
   return (
     <main className="page page-home">
-      <header className="page-header">
+      {/* <header className="page-header">
         <h1 className="page-title">Marvel Pokédex</h1>
 
         <form className="search-form" onSubmit={handleSubmit}>
@@ -226,7 +226,7 @@ const handlePokemonMouseLeave = (event) => {
         {nameParam && (
           <h2 className="results-title">Résultats pour "{nameParam}"</h2>
         )}
-      </header>
+      </header> */}
 
       {/* LISTE DES PERSONNAGES – cartes Pokémon */}
       <div className="cards">
@@ -294,21 +294,11 @@ const handlePokemonMouseLeave = (event) => {
         })}
       </div>
 
-      {/* PAGINATION */}
-      <Pagination
-        page={page}
-        limit={limit}
-        total={total}
-        resultsLength={resultsLength}
-        onChangePage={(newPage) => updateParams(newPage, limit)}
-        onChangeLimit={(newLimit) => {
-          updateParams(1, newLimit);
-        }}
-      />
+    
 
       {/* DÉCOUVERTE DU JOUR */}
       <section className="daily-discovery">
-        <h2 className="results-title">Découverte du jour</h2>
+
         {isRandomLoading ? (
           <p className="loading">Chargement...</p>
         ) : randomCharacter ? (
@@ -364,7 +354,7 @@ const handlePokemonMouseLeave = (event) => {
                 </div>
               </div>
               <button onClick={fetchRandomCharacter} className="random-button">
-                Découvrir quelqu’un d’autre
+                Random Heroes
               </button>
             </article>
           </div>
@@ -421,7 +411,7 @@ const handlePokemonMouseLeave = (event) => {
 
               {/* Titre + description en dessous */}
               <div className="detail-content">
-                <p className="detail-meta">Personnage Marvel</p>
+                <p className="detail-meta"></p>
                 <h2 className="detail-title">
                   {selectedCharacter.name || "Sans nom"}
                 </h2>
@@ -435,6 +425,18 @@ const handlePokemonMouseLeave = (event) => {
           </div>
         </div>
       )}
+
+        {/* PAGINATION */}
+      <Pagination
+        page={page}
+        limit={limit}
+        total={total}
+        resultsLength={resultsLength}
+        onChangePage={(newPage) => updateParams(newPage, limit)}
+        onChangeLimit={(newLimit) => {
+          updateParams(1, newLimit);
+        }}
+      />
     </main>
   );
 };

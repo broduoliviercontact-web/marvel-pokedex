@@ -10,7 +10,7 @@ const Characters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const nameParam = searchParams.get("name") || "";
   const pageParam = parseInt(searchParams.get("page") || "1", 10);
-  const limitParam = parseInt(searchParams.get("limit") || "20", 10);
+  const limitParam = parseInt(searchParams.get("limit") || "100", 10);
 
   const page = Number.isNaN(pageParam) || pageParam < 1 ? 1 : pageParam;
   const limit = Number.isNaN(limitParam) || limitParam < 1 ? 20 : limitParam;
@@ -190,7 +190,7 @@ const Characters = () => {
 
   return (
     <main className="page page-characters">
-      <header className="page-header">
+      {/* <header className="page-header">
         <h1 className="page-title">Personnages Marvel</h1>
 
         <form className="search-form" onSubmit={handleSubmit}>
@@ -211,7 +211,7 @@ const Characters = () => {
         {nameParam && (
           <h2 className="results-title">Résultats pour "{nameParam}"</h2>
         )}
-      </header>
+      </header> */}
 
       {/* LISTE DES PERSONNAGES – version Pokémon */}
       <div className="cards">
@@ -277,21 +277,11 @@ const Characters = () => {
         })}
       </div>
 
-      {/* PAGINATION */}
-      <Pagination
-        page={page}
-        limit={limit}
-        total={total}
-        resultsLength={resultsLength}
-        onChangePage={(newPage) => updateParams(newPage, limit)}
-        onChangeLimit={(newLimit) => {
-          updateParams(1, newLimit);
-        }}
-      />
+
 
       {/* DÉCOUVERTE DU JOUR – version Pokémon */}
       <section className="daily-discovery">
-        <h2 className="results-title">Découverte du jour (Personnage)</h2>
+        
         {isRandomLoading ? (
           <p className="loading">Chargement...</p>
         ) : randomCharacter ? (
@@ -422,6 +412,19 @@ const Characters = () => {
           </div>
         </div>
       )}
+
+            {/* PAGINATION */}
+      <Pagination
+        page={page}
+        limit={limit}
+        total={total}
+        resultsLength={resultsLength}
+        onChangePage={(newPage) => updateParams(newPage, limit)}
+        onChangeLimit={(newLimit) => {
+          updateParams(1, newLimit);
+        }}
+      />
+
     </main>
   );
 };

@@ -1,316 +1,99 @@
-/* SearchBar.css
-   c4 btn look + Marvel variant + Burbank fonts + search form
-*/
-
-/* ---------- optional Burbank fonts (as provided) ---------- */
-/* keep or remove if you don't want external fonts to load */
-@font-face {font-family: "Burbank Big Condensed"; src: url("//db.onlinewebfonts.com/t/cdc8c3de1e6bd5a9a67c6a001f9fedd0.eot"); src: url("//db.onlinewebfonts.com/t/cdc8c3de1e6bd5a9a67c6a001f9fedd0.eot?#iefix") format("embedded-opentype"), url("//db.onlinewebfonts.com/t/cdc8c3de1e6bd5a9a67c6a001f9fedd0.woff2") format("woff2"), url("//db.onlinewebfonts.com/t/cdc8c3de1e6bd5a9a67c6a001f9fedd0.woff") format("woff"), url("//db.onlinewebfonts.com/t/cdc8c3de1e6bd5a9a67c6a001f9fedd0.ttf") format("truetype"), url("//db.onlinewebfonts.com/t/cdc8c3de1e6bd5a9a67c6a001f9fedd0.svg#Burbank Big Condensed") format("svg"); }
-@font-face {font-family: "Burbank Big Regular"; src: url("//db.onlinewebfonts.com/t/8dd35a5ee9eab8c7c069365ac14fed9a.eot"); src: url("//db.onlinewebfonts.com/t/8dd35a5ee9eab8c7c069365ac14fed9a.eot?#iefix") format("embedded-opentype"), url("//db.onlinewebfonts.com/t/8dd35a5ee9eab8c7c069365ac14fed9a.woff2") format("woff2"), url("//db.onlinewebfonts.com/t/8dd35a5ee9eab8c7c069365ac14fed9a.woff") format("woff"), url("//db.onlinewebfonts.com/t/8dd35a5ee9eab8c7c069365ac14fed9a.ttf") format("truetype"), url("//db.onlinewebfonts.com/t/8dd35a5ee9eab8c7c069365ac14fed9a.svg#Burbank Big Regular") format("svg"); }
-@font-face {
-    font-family: "Burbank Small Black";
-    src: url("https://db.onlinewebfonts.com/t/9f62e2b9b9235acb5512c7f03cf0f792.eot");
-    src: url("https://db.onlinewebfonts.com/t/9f62e2b9b9235acb5512c7f03cf0f792.eot?#iefix")format("embedded-opentype"),
-    url("https://db.onlinewebfonts.com/t/9f62e2b9b9235acb5512c7f03cf0f792.woff2")format("woff2"),
-    url("https://db.onlinewebfonts.com/t/9f62e2b9b9235acb5512c7f03cf0f792.woff")format("woff"),
-    url("https://db.onlinewebfonts.com/t/9f62e2b9b9235acb5512c7f03cf0f792.ttf")format("truetype"),
-    url("https://db.onlinewebfonts.com/t/9f62e2b9b9235acb5512c7f03cf0f792.svg#Burbank Small Black")format("svg");
+.searchbar {
+  position: relative;
+  width: 100%;
+  max-width: 360px;
 }
 
-/* general box-sizing */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-/* search form layout */
-.search-form {
+/* bloc principal (input + bouton icône) */
+.searchbar-form {
   display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-/* search input */
-.search-input {
-  padding: 8px 12px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background: rgba(5, 7, 17, 0.6);
-  color: inherit;
-  min-width: 220px;
-  outline: none;
-  transition: border-color 0.18s, background-color 0.18s, box-shadow 0.18s,
-    transform 0.12s;
-  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-}
-.search-input::placeholder {
-  color: rgba(245, 245, 247, 0.6);
-}
-.search-input:focus {
-  border-color: #646cff;
-  box-shadow: 0 0 0 2px rgba(100, 108, 255, 0.12);
-  background: rgba(5, 7, 17, 0.85);
-}
-
-/* ------------ c4 button adapted ------------ */
-
-.search-button {
-  position: relative;
-  display: inline-grid;
-  place-items: center;
-  padding: 10px 18px 8px 18px;
-  margin: 0;
-  border: 0;
-  background: rgba(255,255,255,0.06);
-  color: #fff;
-  font-size: 0.95rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: background 100ms ease, color 100ms ease;
-  border-radius: 0 12px 12px 0; /* glue to input */
-  outline: none;
-  font-family: "Burbank Small Black", "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial;
-}
-
-/* Marvel variant: deep red background consistent with Marvel palette */
-.search-button.marvel {
-  background: rgba(255,255,255,0.04); /* très léger fond */
-  color: #fff;
-  border: 0;
-  box-shadow: none;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.18);
-  transition: background 150ms linear, color 150ms linear, box-shadow 150ms;
-}
-
-/* hover behavior */
-.search-button.marvel:hover {
-  background: white;
-  color: black;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
-}
-
-.search-button.marvel:focus {
-  box-shadow: 0 0 0 4px rgba(100,108,255,0.12);
-}
-/* overlay & clip-path */
-.search-button::before {
-  position: absolute;
-  content: "";
-  inset: 0;
-  background: rgba(255,255,255,0.06);
-  pointer-events: none;
-  clip-path: polygon(-10% -10%, -10% 110%, 10% 90%, 6% 10%, 94% 10%, 91% 90%, 10% 90%, -10% 110%, 110% 110%, 110% -10%);
-  border-radius: inherit;
-}
-
-/* animated border pseudo-element */
-.search-button::after {
-  position: absolute;
-  content: "";
-  inset: 0;
-  border: 0px solid white;
-  border-radius: inherit;
-}
-.search-button:hover:after {
-  animation: 300ms ease c4border;
-  animation-fill-mode: forwards;
-}
-
-/* text inside button */
-.search-button .btntext {
-  position: relative;
-  z-index: 2;
-  display: inline-flex;
-  gap: 8px;
-  align-items: center;
-  justify-content: center;
-}
-
-/* tiny translate animation on hover */
-.search-button:hover .btntext {
-  animation: 200ms ease c4text;
-  animation-fill-mode: forwards;
-}
-
-/* keyframes */
-@keyframes c4border {
-  0% {
-    inset: -16px;
-    border: 2px solid white;
-    border-radius: 10px;
-    opacity: 0;
-  }
-  60% {
-    inset: -7px;
-    border: 6px solid white;
-    border-radius: 7px;
-    opacity: 0.7;
-  }
-  100% {
-    inset: -8px;
-    border: 4px solid white;
-    border-radius: 8px;
-    opacity: 0.7;
-  }
-}
-@keyframes c4text {
-  0% {
-    transform: translateY(0);
-  }
-  60% {
-    transform: translateY(-1.6px);
-  }
-  100% {
-    transform: translateY(0);
-  }
-}
-
-/* -------- switch styles (unchanged) -------- */
-
-.switch-wrapper {
-  display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin-left: 6px;
-}
-.switch-label {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 12px;
-  border-radius: 10px;
-  background: rgba(255,255,255,0.02);
-  color: #fff;
-  font-weight: 700;
-  font-size: 0.85rem;
-  letter-spacing: 0.04em;
-  cursor: pointer;
-  user-select: none;
-  transition: background 120ms linear, color 120ms linear, transform 80ms;
-  border: 1px solid transparent;
-}
-.switch-label.active {
-  background: rgba(255,255,255,0.10);
-  color: #fff;
-  transform: translateY(-1px);
-  border-color: rgba(255,255,255,0.12);
-}
 
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 46px;
-  height: 26px;
-}
-.switch-checkbox {
-  opacity: 0;
-  width: 0;
-  height: 0;
-  position: absolute;
-  left: -9999px;
-}
-.switch-slider {
-  position: absolute;
-  cursor: pointer;
-  inset: 0;
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(8, 10, 24, 0.92);
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  transition: background-color 0.18s, transform 0.18s, box-shadow 0.18s;
-}
-.switch-slider::before {
-  content: "";
-  position: absolute;
-  height: 20px;
-  width: 20px;
-  left: 3px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: #fff;
-  border-radius: 50%;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
-  transition: left 0.18s, transform 0.18s;
-}
-.switch-checkbox:checked + .switch-slider {
-  background: linear-gradient(
-    90deg,
-    rgba(100, 255, 177, 0.18),
-    rgba(100, 255, 177, 0.06)
-  );
-  border-color: rgba(100, 255, 177, 0.28);
-}
-.switch-checkbox:checked + .switch-slider::before {
-  left: calc(100% - 23px);
-}
-.switch-checkbox:not(:checked) + .switch-slider {
-  background: linear-gradient(
-    90deg,
-    rgba(100, 108, 255, 0.18),
-    rgba(100, 108, 255, 0.06)
-  );
-  border-color: rgba(100, 108, 255, 0.28);
-}
-.switch-checkbox:focus + .switch-slider {
-  box-shadow: 0 0 0 3px rgba(100, 108, 255, 0.16);
+  padding: 6px 10px;
+
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.75),
+    0 12px 30px rgba(0, 0, 0, 0.7);
 }
 
-.switch-wrapper .switch-label:first-child {
-  margin-right: 6px;
-}
-
-.switch-label:hover {
-  background: rgba(255,255,255,0.12);
-  color: #fff;
-}
-.switch-label:focus {
+/* l’input */
+.searchbar-input {
+  flex: 1;
+  background: transparent;
+  border: none;
   outline: none;
-  box-shadow: 0 0 0 4px rgba(100,108,255,0.08);
+  color: #f9fafb;
+  font-size: 0.9rem;
 }
 
-.switch-wrapper {
-  display: inline-flex;
-  gap: 8px;
+.searchbar-input::placeholder {
+  color: rgba(148, 163, 184, 0.9);
+}
+
+/* bouton loupe transparent (comme tu voulais) */
+.searchbar-button {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.8);
+  background: transparent;
+  display: flex;
   align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.2s ease, border-color 0.2s ease,
+    transform 0.1s ease;
 }
 
-
-
-
-/* responsive */
-
-
-@media (max-width: 720px) {
-  .switch-label {
-    padding: 6px 10px;
-    border-radius: 8px;
-    font-size: 0.82rem;
-  }
-}
-@media (max-width: 720px) {
-  .search-form {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  .switch-wrapper {
-    width: 100%;
-    justify-content: center;
-    margin-top: 8px;
-  }
-  .search-input {
-    min-width: 160px;
-    border-radius: 12px;
-  }
-  .search-button {
-    border-radius: 12px;
-  }
+.searchbar-button:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: #ffffff;
+  transform: translateY(-1px);
 }
 
-/* reduce motion */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    transition: none !important;
-    animation-duration: 0.001s !important;
-  }
+.searchbar-icon {
+  font-size: 0.9rem;
+}
+
+/* Liste de suggestions */
+.searchbar-suggestions {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  width: 100%;
+  margin: 0;
+  padding: 6px 0;
+  list-style: none;
+
+  background: rgba(5, 7, 17, 0.97);
+  border-radius: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9);
+
+  max-height: 260px;
+  overflow-y: auto;
+  z-index: 60;
+}
+
+.searchbar-suggestion {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: #e5e7eb;
+  transition: background 0.12s ease;
+}
+
+.searchbar-suggestion:hover {
+  background: rgba(148, 163, 184, 0.18);
+}
+
+.searchbar-info {
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  color: #9ca3af;
 }

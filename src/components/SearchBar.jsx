@@ -1,105 +1,149 @@
-import { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { API_BASE_URL } from "../config";
 import "./SearchBar.css";
 
 const SearchBar = () => {
+  const [query, setQuery] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   const navigate = useNavigate();
   const location = useLocation();
-  const params = new URLSearchParams(location.search);
-  const initialName = params.get("name") || "";
+  const debounceRef = useRef(null);
+  const containerRef = useRef(null);
 
-  const [isComics, setIsComics] = useState(
-    location.pathname.includes("/comics")
-  );
-  const [query, setQuery] = useState(initialName);
-
+  // Synchronise la barre avec le paramètre ?name= quand on est sur /characters
   useEffect(() => {
-    setIsComics(location.pathname.includes("/comics"));
-    setQuery(new URLSearchParams(location.search).get("name") || "");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.pathname, location.search]);
+    const params = new URLSearchParams(location.search);
+    const nameParam = params.get("name") || "";
+    setQuery(nameParam);
+  }, [location.search]);
 
-  const submitSearch = (e) => {
-    if (e) e.preventDefault();
-    const qs = new URLSearchParams();
-    if (query && query.trim()) qs.set("name", query.trim());
-    if (qs.get("page")) qs.delete("page");
-    const base = isComics ? "/comics" : "/characters";
-    const url = qs.toString() ? `${base}?${qs.toString()}` : base;
-    navigate(url, { replace: false });
+  // Autocomplete : appelle l’API après un petit délai
+  useEffect(() => {
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+
+    const trimmed = query.trim();
+    if (!trimmed) {
+      setSuggestions([]);
+      setIsOpen(false);
+      return;
+    }
+
+    debounceRef.current = setTimeout(async () => {
+      try {
+        setIsLoading(true);
+        const response = await axios.get(`${API_BASE_URL}/characters`, {
+          params: {
+            name: trimmed,
+            limit: 8,
+            skip: 0,
+          },
+        });
+
+        const results = Array.isArray(response.data?.results)
+          ? response.data.results
+          : [];
+
+        const names = results
+          .map((c) => c.name)
+          .filter(Boolean);
+
+        setSuggestions(names);
+        setIsOpen(names.length > 0);
+      } catch (err) {
+        console.error("Autocomplete error:", err);
+        setSuggestions([]);
+        setIsOpen(false);
+      } finally {
+        setIsLoading(false);
+      }
+    }, 300);
+
+    return () => {
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+      }
+    };
+  }, [query]);
+
+  // Fermer la liste quand on clique en dehors
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const goToSearch = (value) => {
+    const trimmed = value.trim();
+    if (!trimmed) return;
+    navigate(`/characters?name=${encodeURIComponent(trimmed)}`);
+    setIsOpen(false);
   };
 
-  const onToggle = () => {
-    setIsComics((prev) => !prev);
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    goToSearch(query);
+  };
+
+  const handleSuggestionClick = (name) => {
+    setQuery(name);
+    goToSearch(name);
   };
 
   return (
-    <form className="search-form" onSubmit={submitSearch}>
-      <input
-        className="search-input"
-        type="search"
-        placeholder={isComics ? "Search comics..." : "Search characters..."}
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        aria-label="Search"
-      />
+    <div className="searchbar" ref={containerRef}>
+      <form className="searchbar-form" onSubmit={handleSubmit}>
+        <input
+          className="searchbar-input"
+          type="text"
+          placeholder="Search characters..."
+          value={query}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            setIsOpen(true);
+          }}
+        />
+        <button
+          type="submit"
+          className="searchbar-button"
+          aria-label="Rechercher"
+        >
+          <span className="searchbar-icon">🔍</span>
+        </button>
+      </form>
 
-      {/* Button with SVG loupe + Marvel variant by default */}
-      <button
-        type="submit"
-        className="search-button marvel"
-        aria-label="Search"
-        title="Search"
-      >
-        <span className="btntext" aria-hidden="true">
-          {/* SVG loupe icon (inline, scalable) */}
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <path
-              d="M21 21l-4.35-4.35"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <circle
-              cx="11"
-              cy="11"
-              r="6"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </span>
-      </button>
-
-      <div className="switch-wrapper" title="Switch Characters / Comics">
-        <label className="switch-label">HEROES</label>
-
-        <label className="switch" aria-hidden="false">
-          <input
-            type="checkbox"
-            checked={isComics}
-            onChange={onToggle}
-            className="switch-checkbox"
-          />
-          <span className="switch-slider" />
-        </label>
-
-        <label className={`switch-label ${isComics ? "active" : ""}`}>
-          Comics
-        </label>
-      </div>
-    </form>
+      {isOpen && (suggestions.length > 0 || isLoading) && (
+        <ul className="searchbar-suggestions">
+          {isLoading && (
+            <li className="searchbar-info">Chargement…</li>
+          )}
+          {!isLoading &&
+            suggestions.map((name) => (
+              <li
+                key={name}
+                className="searchbar-suggestion"
+                onClick={() => handleSuggestionClick(name)}
+              >
+                {name}
+              </li>
+            ))}
+        </ul>
+      )}
+    </div>
   );
 };
 
