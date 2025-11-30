@@ -22,13 +22,23 @@
    =========================== */
 
 .cards {
- display: grid;
- width : 100%;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* au lieu de 260px */
-  gap: 30px;
-  perspective: 1200px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
 
+  /* espace sur les côtés + largeur max */
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 0 40px;
 }
+/* Écrans moyens : 4 par ligne */
+@media (min-width: 1024px) {
+  .cards .card {
+    flex: 1 1 calc(25% - 24px);
+  }
+}
+
 
 /* wrapper d'une card (article) */
 .card {
@@ -111,9 +121,6 @@
   overflow: hidden;
 }
 
-.tilt-card:hover {
-
-}
 
 /* faces avant / arrière */
 

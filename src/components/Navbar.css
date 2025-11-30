@@ -23,6 +23,8 @@
 
   /* important : on coupe ce qui dépasse (logo, glow, etc.) */
   overflow: hidden;
+
+  margin-bottom: 50px;
 }
 
 /* wrapper interne pour placer gauche / droite */
