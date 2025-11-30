@@ -27,21 +27,31 @@ const Characters = () => {
   const [selectedCharacter, setSelectedCharacter] = useState(null);
 
   // Shine Pokémon
-  const handlePokemonMouseMove = (event) => {
-    const card = event.currentTarget;
-    const rect = card.getBoundingClientRect();
-    const x = ((event.clientX - rect.left) / rect.width) * 100;
-    const y = ((event.clientY - rect.top) / rect.height) * 100;
+  // Shine + Tilt Pokémon (même logique que Home & Comics)
+const handlePokemonMouseMove = (event) => {
+  const card = event.currentTarget;
+  const rect = card.getBoundingClientRect();
 
-    card.style.setProperty("--shine-x", `${x}%`);
-    card.style.setProperty("--shine-y", `${y}%`);
-  };
+  const x = (event.clientX - rect.left) / rect.width;
+  const y = (event.clientY - rect.top) / rect.height;
 
-  const handlePokemonMouseLeave = (event) => {
-    const card = event.currentTarget;
-    card.style.setProperty("--shine-x", "50%");
-    card.style.setProperty("--shine-y", "0%");
-  };
+  card.style.setProperty("--shine-x", `${x * 100}%`);
+  card.style.setProperty("--shine-y", `${y * 100}%`);
+
+  const tiltX = (0.5 - y) * 18;
+  const tiltY = (x - 0.5) * 18;
+
+  card.style.setProperty("--tilt-x", `${tiltX}deg`);
+  card.style.setProperty("--tilt-y", `${tiltY}deg`);
+};
+
+const handlePokemonMouseLeave = (event) => {
+  const card = event.currentTarget;
+  card.style.setProperty("--shine-x", "50%");
+  card.style.setProperty("--shine-y", "0%");
+  card.style.setProperty("--tilt-x", "0deg");
+  card.style.setProperty("--tilt-y", "0deg");
+};
 
   // Fond de page
   useEffect(() => {
@@ -378,23 +388,24 @@ const Characters = () => {
             <div className="detail-layout">
               <div className="detail-media">
                 <div className="pokemon-card-wrapper">
-                  <div
-                    className="pokemon-card"
-                    onMouseMove={handlePokemonMouseMove}
-                    onMouseLeave={handlePokemonMouseLeave}
-                  >
-                    <div className="pokemon-card-inner">
-                      {selectedCharacter.thumbnail?.path &&
-                      selectedCharacter.thumbnail?.extension ? (
-                        <img
-                          className="pokemon-card-img"
-                          src={getImageUrl(selectedCharacter.thumbnail)}
-                          alt={selectedCharacter.name}
-                        />
-                      ) : null}
-                    </div>
-                  </div>
-                </div>
+  <div
+    className="pokemon-card pokemon-card--holo"
+    onMouseMove={handlePokemonMouseMove}
+    onMouseLeave={handlePokemonMouseLeave}
+  >
+    <div className="pokemon-card-inner">
+      {selectedCharacter.thumbnail?.path &&
+      selectedCharacter.thumbnail?.extension ? (
+        <img
+          className="pokemon-card-img"
+          src={getImageUrl(selectedCharacter.thumbnail)}
+          alt={selectedCharacter.name}
+        />
+      ) : null}
+    </div>
+  </div>
+</div>
+
               </div>
 
               <div className="detail-content">

@@ -6,6 +6,32 @@ import Pagination from "../components/Pagination";
 import "../pages/pages.css";
 import { API_BASE_URL } from "../config";
 
+// Même effet holo + 3D que Home
+const handlePokemonMouseMove = (event) => {
+  const card = event.currentTarget;
+  const rect = card.getBoundingClientRect();
+
+  const x = (event.clientX - rect.left) / rect.width;
+  const y = (event.clientY - rect.top) / rect.height;
+
+  card.style.setProperty("--shine-x", `${x * 100}%`);
+  card.style.setProperty("--shine-y", `${y * 100}%`);
+
+  const tiltX = (0.5 - y) * 18;
+  const tiltY = (x - 0.5) * 18;
+
+  card.style.setProperty("--tilt-x", `${tiltX}deg`);
+  card.style.setProperty("--tilt-y", `${tiltY}deg`);
+};
+
+const handlePokemonMouseLeave = (event) => {
+  const card = event.currentTarget;
+  card.style.setProperty("--shine-x", "50%");
+  card.style.setProperty("--shine-y", "0%");
+  card.style.setProperty("--tilt-x", "0deg");
+  card.style.setProperty("--tilt-y", "0deg");
+};
+
 const Comics = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const nameParam = searchParams.get("name") || "";
@@ -25,22 +51,6 @@ const Comics = () => {
   const [randomComic, setRandomComic] = useState(null);
   const [isRandomLoading, setIsRandomLoading] = useState(false);
   const [selectedComic, setSelectedComic] = useState(null);
-
-  const handlePokemonMouseMove = (event) => {
-    const card = event.currentTarget;
-    const rect = card.getBoundingClientRect();
-    const x = ((event.clientX - rect.left) / rect.width) * 100;
-    const y = ((event.clientY - rect.top) / rect.height) * 100;
-
-    card.style.setProperty("--shine-x", `${x}%`);
-    card.style.setProperty("--shine-y", `${y}%`);
-  };
-
-  const handlePokemonMouseLeave = (event) => {
-    const card = event.currentTarget;
-    card.style.setProperty("--shine-x", "50%");
-    card.style.setProperty("--shine-y", "0%");
-  };
 
   // Fond de page
   useEffect(() => {
@@ -188,30 +198,9 @@ const Comics = () => {
 
   return (
     <main className="page page-comics">
-      {/* <header className="page-header">
-        <h1 className="page-title">Comics Marvel</h1>
+      {/* header local désactivé, on utilise la searchbar globale */}
 
-        <form className="search-form" onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="Rechercher un comic..."
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-          />
-          <button type="submit">Rechercher</button>
-          {nameParam && (
-            <button type="button" onClick={handleReset}>
-              Réinitialiser
-            </button>
-          )}
-        </form>
-
-        {nameParam && (
-          <h2 className="results-title">Résultats pour "{nameParam}"</h2>
-        )}
-      </header> */}
-
-      {/* LISTE DES COMICS – style Pokémon */}
+      {/* LISTE DES COMICS – même style Pokémon que Home */}
       <div className="cards">
         {comics.map((comic) => {
           const key = comic._id || comic.id || comic.title;
@@ -265,9 +254,9 @@ const Comics = () => {
                   <h3 className="card-title card-title-back">
                     {comic.title}
                   </h3>
-                  <p className="card-desc">
-                    {comic.description || "Pas de description"}
-                  </p>
+                  {comic.description?.trim() && (
+                    <p className="card-desc">{comic.description}</p>
+                  )}
                 </div>
               </div>
             </article>
@@ -275,11 +264,8 @@ const Comics = () => {
         })}
       </div>
 
-
-
-      {/* DÉCOUVERTE DU JOUR – style Pokémon */}
+      {/* DÉCOUVERTE DU JOUR – même style que Home */}
       <section className="daily-discovery">
-  
         {isRandomLoading ? (
           <p className="loading">Chargement...</p>
         ) : randomComic ? (
@@ -329,13 +315,15 @@ const Comics = () => {
                   <h3 className="card-title card-title-back">
                     {randomComic.title}
                   </h3>
-                  <p className="card-desc">
-                    {randomComic.description || "Pas de description"}
-                  </p>
+                  {randomComic.description?.trim() && (
+                    <p className="card-desc">
+                      {randomComic.description}
+                    </p>
+                  )}
                 </div>
               </div>
               <button onClick={fetchRandomComic} className="random-button">
-                Découvrir un autre comic
+                RANDOM COMICS
               </button>
             </article>
           </div>
@@ -351,11 +339,11 @@ const Comics = () => {
         )}
       </section>
 
-      {/* FICHE DÉTAILLÉE – carte Pokémon en grand */}
+      {/* OVERLAY DÉTAILLÉ – grande carte holo */}
       {selectedComic && (
         <div className="detail-overlay" onClick={handleCloseDetail}>
           <div
-            className="detail-card"
+            className="detail-overlay-inner"
             onClick={(event) => event.stopPropagation()}
           >
             <button
@@ -367,38 +355,44 @@ const Comics = () => {
               ×
             </button>
 
-            <div className="detail-body">
-              <div className="pokemon-card-wrapper">
-                <div
-                  className="pokemon-card"
-                  onMouseMove={handlePokemonMouseMove}
-                  onMouseLeave={handlePokemonMouseLeave}
-                >
-                  <div className="pokemon-card-inner">
-                    {selectedComic.thumbnail?.path &&
-                    selectedComic.thumbnail?.extension ? (
-                      <img
-                        className="pokemon-card-img"
-                        src={getImageUrl(selectedComic.thumbnail)}
-                        alt={selectedComic.title}
-                      />
-                    ) : null}
+            <div className="detail-layout">
+              <div className="detail-media">
+                <div className="pokemon-card-wrapper">
+                  <div
+                    className="pokemon-card pokemon-card--holo"
+                    onMouseMove={handlePokemonMouseMove}
+                    onMouseLeave={handlePokemonMouseLeave}
+                  >
+                    <div className="pokemon-card-inner">
+                      {selectedComic.thumbnail?.path &&
+                      selectedComic.thumbnail?.extension ? (
+                        <img
+                          className="pokemon-card-img"
+                          src={getImageUrl(selectedComic.thumbnail)}
+                          alt={selectedComic.title}
+                        />
+                      ) : null}
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <div className="detail-text">
-                <h2 className="detail-title">{selectedComic.title}</h2>
-                <p className="detail-description">
-                  {selectedComic.description || "Pas de description"}
-                </p>
+              <div className="detail-content">
+                <h2 className="detail-title">
+                  {selectedComic.title || "Sans titre"}
+                </h2>
+                {selectedComic.description?.trim() && (
+                  <p className="detail-desc">
+                    {selectedComic.description}
+                  </p>
+                )}
               </div>
             </div>
           </div>
         </div>
       )}
 
-            {/* PAGINATION */}
+      {/* PAGINATION */}
       <Pagination
         page={page}
         limit={limit}
