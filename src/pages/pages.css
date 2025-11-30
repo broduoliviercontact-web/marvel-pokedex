@@ -9,6 +9,8 @@
   margin: 0 auto;
 
 }
+
+
 .page-title {
 
   margin: 0 0 8px 0;
@@ -326,19 +328,21 @@ font-size: 100px;
     radial-gradient(circle at top, rgba(230, 36, 41, 0.35), transparent 55%),
     rgba(3, 7, 18, 0.94);
   backdrop-filter: blur(12px);
+   align-items: flex-start;
 }
 
 .detail-overlay-inner {
   position: relative;
   width: min(900px, 100%);
-  max-height: 85vh;
+  max-height: 90vh; /* un peu plus haut si possible */
   background:
     radial-gradient(circle at 0% 0%, rgba(248, 250, 252, 0.06), transparent 55%),
     linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(30, 64, 175, 0.85));
   border-radius: 18px;
   border: 1px solid rgba(148, 163, 184, 0.5);
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9);
-  overflow: hidden;
+  overflow-y: auto;        /* ✅ scroll vertical si besoin */
+  overflow-x: hidden;      /* on garde caché à l’horizontale */
   animation: detail-zoom-in 0.28s ease-out;
 }
 
@@ -718,7 +722,8 @@ justify-content: center;
   align-items: center;
   text-align: center; 
   justify-content: flex-end;
-  font-size: 100px;
+  font-size: 200px;
+  font-weight: 100px;
 }
 
 .home-hero-pill {

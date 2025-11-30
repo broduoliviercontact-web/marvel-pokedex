@@ -409,7 +409,7 @@ const handlePokemonMouseLeave = (event) => {
               </div>
 
               <div className="detail-content">
-                <p className="detail-meta">Personnage Marvel</p>
+            
                 <h2 className="detail-title">
                   {selectedCharacter.name || "Sans nom"}
                 </h2>
