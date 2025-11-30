@@ -166,13 +166,30 @@ const Home = () => {
     
     <main className="page page-home">
       
-      <div className="header">
-        <h1 className="page-title"><span><img src="/marvel-logo.png" alt="Marvel logo" className="page-logo" /></span>Explorer</h1>
-        
-        <p className="page-desc">
-          A unofficial Marvel DataBase to explore Comics and Heroes.
-        </p>
-      </div>
+<header className="home-hero">
+  <div className="home-hero-left">
+    <div className="home-hero-logo">
+    <img src="/public/Marvel_Logo.svg" alt="Marvel logo" className="home-hero-logo-img" />
+    </div>
+
+    <div className="home-hero-text">
+  
+      <h1 className="home-hero-title">
+        EXPLORER 
+        {/* the <span>Marvel</span> multiverse */}
+      </h1>
+      <p className="home-hero-subtitle">
+        An unofficial Marvel database 
+      </p>
+      
+    </div>
+  </div>
+
+  <div className="home-hero-right">
+  
+  </div>
+</header>
+
       <section className="daily-discovery">
         <div className="daily-row">
 
