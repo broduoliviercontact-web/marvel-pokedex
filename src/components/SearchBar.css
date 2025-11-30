@@ -97,3 +97,80 @@
   font-size: 0.8rem;
   color: #9ca3af;
 }
+.searchbar {
+  position: relative;
+  width: 100%;
+  max-width: 520px; /* un peu plus large pour caser le toggle */
+}
+
+/* nouveau wrapper : input + toggle */
+.searchbar-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* le form garde son look, mais prend toute la place dispo */
+.searchbar-form {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  background: rgba(8, 10, 24, 0.92);
+  border-radius: 999px;
+  padding: 6px 10px;
+
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.75),
+    0 12px 30px rgba(0, 0, 0, 0.7);
+}
+
+/* --- TOGGLE COMICS / CHARACTERS --- */
+
+.search-toggle {
+  display: inline-flex;
+  align-items: center;
+  background: #06276f;
+  border-radius: 999px;
+  padding: 4px;
+  gap: 4px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+}
+
+.search-toggle-btn {
+  border: none;
+  background: transparent;
+  color: #f9736b;
+  font-size: 0.8rem;
+  padding: 6px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  text-transform: capitalize;
+  transition: background 0.18s ease, color 0.18s ease,
+    transform 0.1s ease, box-shadow 0.18s ease;
+  white-space: nowrap;
+}
+
+.search-toggle-btn--active {
+  background: #d62828;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.8),
+    0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+/* Responsive : sur petit écran, on empile */
+@media (max-width: 640px) {
+  .searchbar-top {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-toggle {
+    align-self: flex-end;
+  }
+}

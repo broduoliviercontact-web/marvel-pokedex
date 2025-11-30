@@ -9,18 +9,34 @@ const SearchBar = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [mode, setMode] = useState("characters"); // "characters" | "comics"
 
   const navigate = useNavigate();
   const location = useLocation();
   const debounceRef = useRef(null);
   const containerRef = useRef(null);
 
-  // Synchronise la barre avec le paramètre ?name= quand on est sur /characters
+  // Déterminer le mode par défaut selon l'URL
+  useEffect(() => {
+    if (location.pathname.startsWith("/comics")) {
+      setMode("comics");
+    } else if (location.pathname.startsWith("/characters")) {
+      setMode("characters");
+    }
+  }, [location.pathname]);
+
+  // Synchronise le champ avec ?name= (pour les deux pages, on garde le même param)
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const nameParam = params.get("name") || "";
     setQuery(nameParam);
   }, [location.search]);
+
+  // Quand on change de mode, on ferme les suggestions
+  useEffect(() => {
+    setSuggestions([]);
+    setIsOpen(false);
+  }, [mode]);
 
   // Autocomplete : appelle l’API après un petit délai
   useEffect(() => {
@@ -38,7 +54,10 @@ const SearchBar = () => {
     debounceRef.current = setTimeout(async () => {
       try {
         setIsLoading(true);
-        const response = await axios.get(`${API_BASE_URL}/characters`, {
+
+        const endpoint = mode === "characters" ? "/characters" : "/comics";
+
+        const response = await axios.get(`${API_BASE_URL}${endpoint}`, {
           params: {
             name: trimmed,
             limit: 8,
@@ -50,12 +69,14 @@ const SearchBar = () => {
           ? response.data.results
           : [];
 
-        const names = results
-          .map((c) => c.name)
+        const labels = results
+          .map((item) =>
+            mode === "characters" ? item.name : item.title
+          )
           .filter(Boolean);
 
-        setSuggestions(names);
-        setIsOpen(names.length > 0);
+        setSuggestions(labels);
+        setIsOpen(labels.length > 0);
       } catch (err) {
         console.error("Autocomplete error:", err);
         setSuggestions([]);
@@ -70,7 +91,7 @@ const SearchBar = () => {
         clearTimeout(debounceRef.current);
       }
     };
-  }, [query]);
+  }, [query, mode]);
 
   // Fermer la liste quand on clique en dehors
   useEffect(() => {
@@ -90,7 +111,9 @@ const SearchBar = () => {
   const goToSearch = (value) => {
     const trimmed = value.trim();
     if (!trimmed) return;
-    navigate(`/characters?name=${encodeURIComponent(trimmed)}`);
+
+    const path = mode === "characters" ? "/characters" : "/comics";
+    navigate(`${path}?name=${encodeURIComponent(trimmed)}`);
     setIsOpen(false);
   };
 
@@ -99,46 +122,74 @@ const SearchBar = () => {
     goToSearch(query);
   };
 
-  const handleSuggestionClick = (name) => {
-    setQuery(name);
-    goToSearch(name);
+  const handleSuggestionClick = (label) => {
+    setQuery(label);
+    goToSearch(label);
   };
 
   return (
     <div className="searchbar" ref={containerRef}>
-      <form className="searchbar-form" onSubmit={handleSubmit}>
-        <input
-          className="searchbar-input"
-          type="text"
-          placeholder="Search characters..."
-          value={query}
-          onChange={(e) => {
-            setQuery(e.target.value);
-            setIsOpen(true);
-          }}
-        />
-        <button
-          type="submit"
-          className="searchbar-button"
-          aria-label="Rechercher"
-        >
-          <span className="searchbar-icon">🔍</span>
-        </button>
-      </form>
+      <div className="searchbar-top">
+        <form className="searchbar-form" onSubmit={handleSubmit}>
+          <input
+            className="searchbar-input"
+            type="text"
+            placeholder={
+              mode === "characters"
+                ? "Search characters..."
+                : "Search comics..."
+            }
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setIsOpen(true);
+            }}
+          />
+          <button
+            type="submit"
+            className="searchbar-button"
+            aria-label="Rechercher"
+          >
+            <span className="searchbar-icon">🔍</span>
+          </button>
+        </form>
+
+        {/* Toggle Comics / Characters */}
+        <div className="search-toggle" aria-label="Type de recherche">
+          <button
+            type="button"
+            className={
+              "search-toggle-btn" +
+              (mode === "comics" ? " search-toggle-btn--active" : "")
+            }
+            onClick={() => setMode("comics")}
+          >
+            Comics
+          </button>
+          <button
+            type="button"
+            className={
+              "search-toggle-btn" +
+              (mode === "characters" ? " search-toggle-btn--active" : "")
+            }
+            onClick={() => setMode("characters")}
+          >
+            Characters
+          </button>
+        </div>
+      </div>
 
       {isOpen && (suggestions.length > 0 || isLoading) && (
         <ul className="searchbar-suggestions">
-          {isLoading && (
-            <li className="searchbar-info">Chargement…</li>
-          )}
+          {isLoading && <li className="searchbar-info">Chargement…</li>}
           {!isLoading &&
-            suggestions.map((name) => (
+            suggestions.map((label) => (
               <li
-                key={name}
+                key={label}
                 className="searchbar-suggestion"
-                onClick={() => handleSuggestionClick(name)}
+                onClick={() => handleSuggestionClick(label)}
               >
-                {name}
+                {label}
               </li>
             ))}
         </ul>
