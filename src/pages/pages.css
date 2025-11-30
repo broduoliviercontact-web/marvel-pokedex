@@ -588,9 +588,3 @@
   filter: brightness(0.3) contrast(1.3);
 }
 
-
-@media (min-width: 768px) {
-  .pokemon-card {
-    width: calc(100% / 3 - 1rem);
-  }
-} 
