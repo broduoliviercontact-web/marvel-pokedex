@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import SearchBar from "./SearchBar";
 import marvelLogo from "/marvel-logo.png";
+import marvelLogo2 from "/marvel_logo-1.svg";
 import "./Navbar.css";
 
 const Navbar = () => {

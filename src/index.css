@@ -19,7 +19,13 @@
     --marvel-bg-image: url("/backgrounds/marvel-bg-1.jpg");
 
 }
-
+@font-face {
+  font-family: "MarvelTitle";
+  src: url("/fonts/marvel-2.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 *,
 *::before,
 *::after {

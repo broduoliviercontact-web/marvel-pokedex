@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import getImageUrl from "../utils/getImageUrl";
 import "../pages/pages.css";
 import { API_BASE_URL } from "../config";
+import marvelLogo2 from "/public/Marvel_Logo.svg";
 
 const Home = () => {
   // Découverte du jour – personnage
@@ -169,14 +170,14 @@ const Home = () => {
 <header className="home-hero">
   <div className="home-hero-left">
     <div className="home-hero-logo">
-    <img src="/public/Marvel_Logo.svg" alt="Marvel logo" className="home-hero-logo-img" />
+    <img src={marvelLogo2} alt="Marvel logo" className="home-hero-logo-img" />
     </div>
 
     <div className="home-hero-text">
   
       <h1 className="home-hero-title">
         EXPLORER 
-        {/* the <span>Marvel</span> multiverse */}
+
       </h1>
       <p className="home-hero-subtitle">
         An unofficial Marvel database 
