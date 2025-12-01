@@ -25,20 +25,20 @@ const SearchBar = () => {
     }
   }, [location.pathname]);
 
-  // Synchronise le champ avec ?name= (pour les deux pages, on garde le même param)
+  // Synchroniser le champ avec ?name= (même param pour les deux pages)
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const nameParam = params.get("name") || "";
     setQuery(nameParam);
   }, [location.search]);
 
-  // Quand on change de mode, on ferme les suggestions
+  // Quand on change de mode, on vide les suggestions
   useEffect(() => {
     setSuggestions([]);
     setIsOpen(false);
   }, [mode]);
 
-  // Autocomplete : appelle l’API après un petit délai
+  // Autocomplete avec debounce + filtrage côté front
   useEffect(() => {
     if (debounceRef.current) {
       clearTimeout(debounceRef.current);
@@ -57,10 +57,11 @@ const SearchBar = () => {
 
         const endpoint = mode === "characters" ? "/characters" : "/comics";
 
+        // On récupère un paquet de résultats bruts
         const response = await axios.get(`${API_BASE_URL}${endpoint}`, {
           params: {
-            name: trimmed,
-            limit: 8,
+            name: trimmed, // même param que tes pages Characters/Comics
+            limit: 100,
             skip: 0,
           },
         });
@@ -69,11 +70,16 @@ const SearchBar = () => {
           ? response.data.results
           : [];
 
-        const labels = results
-          .map((item) =>
-            mode === "characters" ? item.name : item.title
-          )
+        const lower = trimmed.toLowerCase();
+
+        // On extrait le bon label, puis on filtre côté front
+        const allLabels = results
+          .map((item) => (mode === "characters" ? item.name : item.title))
           .filter(Boolean);
+
+        const labels = allLabels
+          .filter((label) => label.toLowerCase().includes(lower))
+          .slice(0, 8); // max 8 suggestions affichées
 
         setSuggestions(labels);
         setIsOpen(labels.length > 0);

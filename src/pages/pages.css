@@ -707,6 +707,7 @@ justify-content: center;
 
 
 .home-hero-logo-img {
+  display: flex;
   width: 800px;
   height: 300px;
   border-radius: inherit;
@@ -791,5 +792,13 @@ justify-content: center;
     width: 64px;
     height: 64px;
   }
- 
+  
+}
+
+@media (max-width: 800px) {
+  .home-hero-logo-img {
+    width: 64px;
+    display: flex;
+    height: 64px;
+  }
 }
