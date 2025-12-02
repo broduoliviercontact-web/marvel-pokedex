@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import SearchBar from "./SearchBar";
 import marvelLogo from "/marvel-logo.png";
 
@@ -14,16 +14,26 @@ const Navbar = () => {
             <span className="nav-title">Explorer</span>
           </Link>
 
-          {/* Petit trait de séparation contrôlé en CSS */}
+          {/* trait de séparation */}
           <div className="navbar-divider" />
 
           <div className="nav-links">
-            <Link to="/characters" className="nav-link">
+            <NavLink
+              to="/characters"
+              className={({ isActive }) =>
+                "nav-link" + (isActive ? " nav-link--active" : "")
+              }
+            >
               HEROES
-            </Link>
-            <Link to="/comics" className="nav-link">
+            </NavLink>
+            <NavLink
+              to="/comics"
+              className={({ isActive }) =>
+                "nav-link" + (isActive ? " nav-link--active" : "")
+              }
+            >
               COMICS
-            </Link>
+            </NavLink>
           </div>
         </div>
 

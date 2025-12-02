@@ -1,8 +1,14 @@
 import React from "react";
 import "./Pagination.css";
 
-
-const Pagination = ({ page, limit, total, resultsLength, onChangePage, onChangeLimit }) => {
+const Pagination = ({
+  page,
+  limit,
+  total,
+  resultsLength,
+  onChangePage,
+  onChangeLimit,
+}) => {
   const totalPages = total ? Math.max(1, Math.ceil(total / limit)) : null;
 
   const goPrev = () => {
@@ -51,7 +57,11 @@ const Pagination = ({ page, limit, total, resultsLength, onChangePage, onChangeL
           Next
         </button>
         {totalPages ? (
-          <button onClick={() => onChangePage(totalPages)} disabled={page >= totalPages} aria-label="last-page">
+          <button
+            onClick={() => onChangePage(totalPages)}
+            disabled={page >= totalPages}
+            aria-label="last-page"
+          >
             {">>"}
           </button>
         ) : null}
@@ -59,7 +69,11 @@ const Pagination = ({ page, limit, total, resultsLength, onChangePage, onChangeL
 
       <label className="per-page">
         <span className="per-page-label">per page</span>
-        <select value={String(limit)} onChange={handleLimitChange} aria-label="page-limit">
+        <select
+          value={String(limit)}
+          onChange={handleLimitChange}
+          aria-label="page-limit"
+        >
           <option value="5">5</option>
           <option value="20">20</option>
           <option value="50">50</option>

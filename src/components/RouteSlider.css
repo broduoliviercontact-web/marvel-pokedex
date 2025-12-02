@@ -1,0 +1,196 @@
+.route-slider {
+  position: fixed;
+  inset: 0;
+  z-index: 0;              /* derrière le contenu */
+  pointer-events: none;    /* ne bloque pas les clics */
+  overflow: hidden;
+  perspective: 1200px;     /* pour la rotation 3D */
+}
+
+/* Wrapper qui gère la rotation 3D, le blur, le flash, le shake */
+.route-slider-outer {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transition:
+    transform 0.45s cubic-bezier(0, 0, 0.21, 1),
+    filter 0.45s cubic-bezier(0, 0, 0.21, 1);
+  filter: blur(0px);
+}
+
+
+/* Bande de 3 panneaux côte à côte : 3 x 100vw = 300vw */
+.route-slider-inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 300vw;
+  height: 100vh;
+
+  display: flex;
+  flex-direction: row;
+
+  transition: transform 0.45s cubic-bezier(0, 0, 0.21, 1);
+}
+
+/* Chaque panneau = une "page" pleine largeur */
+.route-panel {
+  position: relative;
+  flex: 0 0 100vw;
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+/* === IMAGES BIEN DIFFÉRENTES POUR VOIR LE MOUVEMENT === */
+
+/* Home : ouverture (fond plutôt clair) */
+.route-panel-home {
+  background-image: url("/backgrounds/marvel-bg-2.jpg");
+}
+
+/* Characters : ambiance héroïque */
+.route-panel-characters {
+  background-image: url("/backgrounds/marvel-bg-1.png");
+}
+
+/* Comics : autre visuel bien distinct */
+.route-panel-comics {
+  background-image: url("/backgrounds/marvel-bg-3.jpg");
+}
+
+/* Effet "grain / trame BD" sur les panneaux */
+.route-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    rgba(15, 23, 42, 0.55) 1px,
+    transparent 1px
+  );
+  background-size: 3px 3px; /* petit motif pour le grain */
+  mix-blend-mode: soft-light;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+/* --- FLASH COULEUR SELON LA DESTINATION --- */
+
+.route-slider-outer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+}
+
+/* Flash bleu pour Characters */
+.route-slider-outer--to-characters::after {
+  animation: route-flash-characters 0.45s ease-out;
+}
+
+/* Flash rouge pour Comics */
+.route-slider-outer--to-comics::after {
+  animation: route-flash-comics 0.45s ease-out;
+}
+
+/* Flash blanc doux pour Home */
+.route-slider-outer--to-home::after {
+  animation: route-flash-home 0.45s ease-out;
+}
+
+/* --- KEYFRAMES FLASH --- */
+
+@keyframes route-flash-characters {
+  0% {
+    opacity: 0.4;
+    background: radial-gradient(
+      circle at center,
+      rgba(56, 189, 248, 0.7),
+      transparent 60%
+    );
+  }
+  100% {
+    opacity: 0;
+    background: transparent;
+  }
+}
+
+@keyframes route-flash-comics {
+  0% {
+    opacity: 0.45;
+    background: radial-gradient(
+      circle at center,
+      rgba(239, 68, 68, 0.8),
+      transparent 60%
+    );
+  }
+  100% {
+    opacity: 0;
+    background: transparent;
+  }
+}
+
+@keyframes route-flash-home {
+  0% {
+    opacity: 0.35;
+    background: radial-gradient(
+      circle at center,
+      rgba(248, 250, 252, 0.7),
+      transparent 65%
+    );
+  }
+  100% {
+    opacity: 0;
+    background: transparent;
+  }
+}
+
+/* --- SHAKE / PARALLAX LÉGER --- */
+
+@keyframes slider-shake-forward {
+  0% {
+    transform: rotateY(-2deg) translateZ(0px) translateX(0);
+  }
+  30% {
+    transform: rotateY(-9deg) translateZ(-50px) translateX(-6px);
+  }
+  70% {
+    transform: rotateY(-5deg) translateZ(-40px) translateX(-2px);
+  }
+  100% {
+    transform: rotateY(-7deg) translateZ(-40px) translateX(0);
+  }
+}
+
+@keyframes slider-shake-backward {
+  0% {
+    transform: rotateY(2deg) translateZ(0px) translateX(0);
+  }
+  30% {
+    transform: rotateY(9deg) translateZ(-50px) translateX(6px);
+  }
+  70% {
+    transform: rotateY(5deg) translateZ(-40px) translateX(2px);
+  }
+  100% {
+    transform: rotateY(7deg) translateZ(-40px) translateX(0);
+  }
+}
+
+/* Effet direct sur les panneaux pendant la transition */
+.route-slider-outer--forward .route-panel,
+.route-slider-outer--backward .route-panel {
+  transition:
+    filter 0.45s cubic-bezier(0, 0, 0.21, 1),
+    transform 0.45s cubic-bezier(0, 0, 0.21, 1);
+
+  transform: scale(1.03);
+}
+
+/* Quand pas en transition, on revient clean */
+.route-slider-outer .route-panel {
+  
+  transform: scale(1);
+}

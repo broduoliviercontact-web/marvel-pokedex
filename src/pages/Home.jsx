@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import getImageUrl from "../utils/getImageUrl";
 import "../pages/pages.css";
 import { API_BASE_URL } from "../config";
-import marvelLogo2 from "/public/Marvel_Logo.svg";
+import marvelLogo2 from "/src/Marvel_Logo.svg";
 
 const Home = () => {
   // Découverte du jour – personnage
@@ -163,38 +163,55 @@ const Home = () => {
   const closeCharacterDetail = () => setSelectedCharacter(null);
   const closeComicDetail = () => setSelectedComic(null);
 
+  // Fermer l'overlay avec Échap + bloquer le scroll du body
+  useEffect(() => {
+    const hasOverlay = !!(selectedCharacter || selectedComic);
+    if (!hasOverlay) return;
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        if (selectedComic) {
+          closeComicDetail();
+        } else if (selectedCharacter) {
+          closeCharacterDetail();
+        }
+      }
+    };
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [selectedCharacter, selectedComic]);
+
   return (
-    
     <main className="page page-home">
-      
-<header className="home-hero">
-  <div className="home-hero-left">
-    <div className="home-hero-logo">
-    <img src={marvelLogo2} alt="Marvel logo" className="home-hero-logo-img" />
-    </div>
+      <header className="home-hero">
+        <div className="home-hero-left">
+          <div className="home-hero-logo">
+            <img
+              src={marvelLogo2}
+              alt="Marvel logo"
+              className="home-hero-logo-img"
+            />
+          </div>
 
-    <div className="home-hero-text">
-  
-      <h1 className="home-hero-title">
-        EXPLORER 
+          <div className="home-hero-text">
+            <h1 className="home-hero-title">EXPLORER</h1>
+            <p className="home-hero-subtitle">An unofficial Marvel database</p>
+          </div>
+        </div>
 
-      </h1>
-      <p className="home-hero-subtitle">
-        An unofficial Marvel database 
-      </p>
-      
-    </div>
-  </div>
-
-  <div className="home-hero-right">
-  
-  </div>
-</header>
+        <div className="home-hero-right" />
+      </header>
 
       <section className="daily-discovery">
         <div className="daily-row">
-
-           {/* Daily comic 1 */}
+          {/* Daily comic */}
           <div className="daily-card-wrapper">
             {isRandomComicLoading ? (
               <p className="loading">Chargement...</p>
@@ -265,6 +282,7 @@ const Home = () => {
               </div>
             )}
           </div>
+
           {/* Daily character */}
           <div className="daily-card-wrapper">
             {isRandomCharacterLoading ? (
@@ -344,8 +362,6 @@ const Home = () => {
               </div>
             )}
           </div>
-
-         
         </div>
       </section>
 

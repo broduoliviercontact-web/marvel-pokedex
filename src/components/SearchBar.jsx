@@ -25,7 +25,7 @@ const SearchBar = () => {
     }
   }, [location.pathname]);
 
-  // Synchroniser le champ avec ?name= (même param pour les deux pages)
+  // Synchroniser le champ avec ?name=
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const nameParam = params.get("name") || "";
@@ -38,7 +38,7 @@ const SearchBar = () => {
     setIsOpen(false);
   }, [mode]);
 
-  // Autocomplete avec debounce + filtrage côté front
+  // Autocomplete avec debounce + filtrage front
   useEffect(() => {
     if (debounceRef.current) {
       clearTimeout(debounceRef.current);
@@ -57,10 +57,9 @@ const SearchBar = () => {
 
         const endpoint = mode === "characters" ? "/characters" : "/comics";
 
-        // On récupère un paquet de résultats bruts
         const response = await axios.get(`${API_BASE_URL}${endpoint}`, {
           params: {
-            name: trimmed, // même param que tes pages Characters/Comics
+            name: trimmed,
             limit: 100,
             skip: 0,
           },
@@ -72,14 +71,13 @@ const SearchBar = () => {
 
         const lower = trimmed.toLowerCase();
 
-        // On extrait le bon label, puis on filtre côté front
         const allLabels = results
           .map((item) => (mode === "characters" ? item.name : item.title))
           .filter(Boolean);
 
         const labels = allLabels
           .filter((label) => label.toLowerCase().includes(lower))
-          .slice(0, 8); // max 8 suggestions affichées
+          .slice(0, 8);
 
         setSuggestions(labels);
         setIsOpen(labels.length > 0);
@@ -185,9 +183,14 @@ const SearchBar = () => {
         </div>
       </div>
 
-      {isOpen && (suggestions.length > 0 || isLoading) && (
+      {isOpen && (
         <ul className="searchbar-suggestions">
-          {isLoading && <li className="searchbar-info">Chargement…</li>}
+          {isLoading && (
+            <li className="searchbar-info">Recherche en cours…</li>
+          )}
+          {!isLoading && suggestions.length === 0 && (
+            <li className="searchbar-info">Aucun résultat</li>
+          )}
           {!isLoading &&
             suggestions.map((label) => (
               <li

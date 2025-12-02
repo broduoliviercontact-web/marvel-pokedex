@@ -7,7 +7,9 @@
   --marvel-text: #f5f5f7;
   --marvel-muted: #9ca3af;
   --marvel-highlight-blue: #646cff;
-  --marvel-bg-image: url("/backgrounds/marvel-bg-1.jpg");
+
+  /* Image de fond par défaut (sera surchargée par les classes body.bg-*) */
+  --marvel-bg-image: url("/backgrounds/marvel-bg-2.jpg");
 
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     sans-serif;
@@ -16,9 +18,9 @@
   color-scheme: dark;
   color: var(--marvel-text);
   background-color: var(--marvel-dark);
-    --marvel-bg-image: url("/backgrounds/marvel-bg-1.jpg");
-
 }
+
+/* Police titre Marvel */
 @font-face {
   font-family: "MarvelTitle";
   src: url("/fonts/marvel-2.otf") format("opentype");
@@ -26,12 +28,15 @@
   font-style: normal;
   font-display: swap;
 }
+
+/* Reset box-sizing */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
+/* Body global */
 body {
   margin: 0;
   min-height: 100vh;
@@ -41,7 +46,6 @@ body {
       rgba(5, 7, 17, 0.6)
     ),
     var(--marvel-bg-image);
-
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -51,31 +55,48 @@ body {
   display: flex;
   justify-content: center;
 
-  /* empêche les débordements horizontaux (et donc la petite barre colorée à droite) */
+  /* évite le petit scroll horizontal */
   overflow-x: hidden;
 }
 
+/* ====== Variantes de fond par page ====== */
+
+/* Home */
 body.bg-home {
   --marvel-bg-image: url("/backgrounds/marvel-bg-2.jpg");
 }
 
-/* Characters = marvel-bg-1 */
+/* Characters */
 body.bg-characters {
   --marvel-bg-image: url("/backgrounds/marvel-bg-1.png");
 }
 
+/* Comics */
 body.bg-comics {
   --marvel-bg-image: url("/backgrounds/marvel-bg-3.jpg");
 }
 
-/* conteneur principal de l'app */
+/* Autres variantes optionnelles (si tu les utilises) */
+body.bg-covers-1 {
+  --marvel-bg-image: url("/backgrounds/marvel-bg-1.jpg");
+}
+
+body.bg-covers-2 {
+  --marvel-bg-image: url("/backgrounds/marvel-bg-2.jpg");
+}
+
+body.bg-ironman {
+  --marvel-bg-image: url("/backgrounds/marvel-bg-3.jpg");
+}
+
+/* Conteneur principal React */
 #root {
   width: 100%;
   max-width: 1200px;
   padding: 0 16px 40px;
 }
 
-/* liens génériques */
+/* Liens génériques */
 a {
   color: inherit;
   text-decoration: none;
@@ -85,14 +106,14 @@ a:hover {
   text-decoration: underline;
 }
 
-/* pour que inputs / boutons utilisent la même police */
+/* Form controls avec la même police */
 button,
 input,
 select {
   font: inherit;
 }
 
-/* petits helpers typographiques */
+/* Helpers typographiques */
 .text-muted {
   color: var(--marvel-muted);
 }
@@ -101,7 +122,7 @@ select {
   color: var(--marvel-red);
 }
 
-/* panels génériques (si besoin pour d'autres composants) */
+/* Panel générique réutilisable */
 .panel {
   background: radial-gradient(
       circle at top left,
@@ -113,17 +134,4 @@ select {
   border: 1px solid var(--marvel-border);
   box-shadow: 0 14px 40px rgba(0, 0, 0, 0.7);
   padding: 16px;
-}
-
-/* variantes de background (optionnel) */
-body.bg-covers-1 {
-  --marvel-bg-image: url("/backgrounds/marvel-bg-1.jpg");
-}
-
-body.bg-covers-2 {
-  --marvel-bg-image: url("/backgrounds/marvel-bg-2.jpg");
-}
-
-body.bg-ironman {
-  --marvel-bg-image: url("/backgrounds/marvel-bg-3.jpg");
 }

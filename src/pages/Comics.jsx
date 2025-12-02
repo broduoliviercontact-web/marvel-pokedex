@@ -198,9 +198,7 @@ const Comics = () => {
 
   return (
     <main className="page page-comics">
-      {/* header local désactivé, on utilise la searchbar globale */}
-
-      {/* LISTE DES COMICS – même style Pokémon que Home */}
+      {/* LISTE DES COMICS – style Pokémon */}
       <div className="cards">
         {comics.map((comic) => {
           const key = comic._id || comic.id || comic.title;
@@ -356,10 +354,10 @@ const Comics = () => {
             </button>
 
             <div className="detail-layout">
-              <div className="detail-media">
+              <div className="detail-media holo-enabled">
                 <div className="pokemon-card-wrapper">
                   <div
-                    className="pokemon-card pokemon-card--holo"
+                    className="pokemon-card pokemon-card--holo card card--swsh card--holo"
                     onMouseMove={handlePokemonMouseMove}
                     onMouseLeave={handlePokemonMouseLeave}
                   >

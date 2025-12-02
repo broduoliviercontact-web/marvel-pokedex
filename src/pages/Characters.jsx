@@ -26,32 +26,31 @@ const Characters = () => {
   const [isRandomLoading, setIsRandomLoading] = useState(false);
   const [selectedCharacter, setSelectedCharacter] = useState(null);
 
-  // Shine Pokémon
   // Shine + Tilt Pokémon (même logique que Home & Comics)
-const handlePokemonMouseMove = (event) => {
-  const card = event.currentTarget;
-  const rect = card.getBoundingClientRect();
+  const handlePokemonMouseMove = (event) => {
+    const card = event.currentTarget;
+    const rect = card.getBoundingClientRect();
 
-  const x = (event.clientX - rect.left) / rect.width;
-  const y = (event.clientY - rect.top) / rect.height;
+    const x = (event.clientX - rect.left) / rect.width;
+    const y = (event.clientY - rect.top) / rect.height;
 
-  card.style.setProperty("--shine-x", `${x * 100}%`);
-  card.style.setProperty("--shine-y", `${y * 100}%`);
+    card.style.setProperty("--shine-x", `${x * 100}%`);
+    card.style.setProperty("--shine-y", `${y * 100}%`);
 
-  const tiltX = (0.5 - y) * 18;
-  const tiltY = (x - 0.5) * 18;
+    const tiltX = (0.5 - y) * 18;
+    const tiltY = (x - 0.5) * 18;
 
-  card.style.setProperty("--tilt-x", `${tiltX}deg`);
-  card.style.setProperty("--tilt-y", `${tiltY}deg`);
-};
+    card.style.setProperty("--tilt-x", `${tiltX}deg`);
+    card.style.setProperty("--tilt-y", `${tiltY}deg`);
+  };
 
-const handlePokemonMouseLeave = (event) => {
-  const card = event.currentTarget;
-  card.style.setProperty("--shine-x", "50%");
-  card.style.setProperty("--shine-y", "0%");
-  card.style.setProperty("--tilt-x", "0deg");
-  card.style.setProperty("--tilt-y", "0deg");
-};
+  const handlePokemonMouseLeave = (event) => {
+    const card = event.currentTarget;
+    card.style.setProperty("--shine-x", "50%");
+    card.style.setProperty("--shine-y", "0%");
+    card.style.setProperty("--tilt-x", "0deg");
+    card.style.setProperty("--tilt-y", "0deg");
+  };
 
   // Fond de page
   useEffect(() => {
@@ -200,29 +199,6 @@ const handlePokemonMouseLeave = (event) => {
 
   return (
     <main className="page page-characters">
-      {/* <header className="page-header">
-        <h1 className="page-title">Personnages Marvel</h1>
-
-        <form className="search-form" onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="Rechercher un personnage..."
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-          />
-          <button type="submit">Rechercher</button>
-          {nameParam && (
-            <button type="button" onClick={handleReset}>
-              Réinitialiser
-            </button>
-          )}
-        </form>
-
-        {nameParam && (
-          <h2 className="results-title">Résultats pour "{nameParam}"</h2>
-        )}
-      </header> */}
-
       {/* LISTE DES PERSONNAGES – version Pokémon */}
       <div className="cards">
         {characters.map((character) => {
@@ -287,11 +263,8 @@ const handlePokemonMouseLeave = (event) => {
         })}
       </div>
 
-
-
       {/* DÉCOUVERTE DU JOUR – version Pokémon */}
       <section className="daily-discovery">
-        
         {isRandomLoading ? (
           <p className="loading">Chargement...</p>
         ) : randomCharacter ? (
@@ -386,30 +359,28 @@ const handlePokemonMouseLeave = (event) => {
             </button>
 
             <div className="detail-layout">
-              <div className="detail-media">
+              <div className="detail-media holo-enabled">
                 <div className="pokemon-card-wrapper">
-  <div
-    className="pokemon-card pokemon-card--holo"
-    onMouseMove={handlePokemonMouseMove}
-    onMouseLeave={handlePokemonMouseLeave}
-  >
-    <div className="pokemon-card-inner">
-      {selectedCharacter.thumbnail?.path &&
-      selectedCharacter.thumbnail?.extension ? (
-        <img
-          className="pokemon-card-img"
-          src={getImageUrl(selectedCharacter.thumbnail)}
-          alt={selectedCharacter.name}
-        />
-      ) : null}
-    </div>
-  </div>
-</div>
-
+                  <div
+                    className="pokemon-card pokemon-card--holo card card--swsh card--holo"
+                    onMouseMove={handlePokemonMouseMove}
+                    onMouseLeave={handlePokemonMouseLeave}
+                  >
+                    <div className="pokemon-card-inner">
+                      {selectedCharacter.thumbnail?.path &&
+                      selectedCharacter.thumbnail?.extension ? (
+                        <img
+                          className="pokemon-card-img"
+                          src={getImageUrl(selectedCharacter.thumbnail)}
+                          alt={selectedCharacter.name}
+                        />
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div className="detail-content">
-            
                 <h2 className="detail-title">
                   {selectedCharacter.name || "Sans nom"}
                 </h2>
@@ -424,7 +395,7 @@ const handlePokemonMouseLeave = (event) => {
         </div>
       )}
 
-            {/* PAGINATION */}
+      {/* PAGINATION */}
       <Pagination
         page={page}
         limit={limit}
@@ -435,7 +406,6 @@ const handlePokemonMouseLeave = (event) => {
           updateParams(1, newLimit);
         }}
       />
-
     </main>
   );
 };

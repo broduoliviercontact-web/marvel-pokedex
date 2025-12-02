@@ -1,11 +1,19 @@
 .searchbar {
   position: relative;
   width: 100%;
-  max-width: 360px;
+  max-width: 520px;
+}
+
+/* wrapper : input + toggle */
+.searchbar-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 /* bloc principal (input + bouton icône) */
 .searchbar-form {
+  flex: 1;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -18,6 +26,15 @@
   box-shadow:
     0 0 0 1px rgba(0, 0, 0, 0.75),
     0 12px 30px rgba(0, 0, 0, 0.7);
+  transition: box-shadow 0.2s ease, transform 0.15s ease;
+}
+
+/* petit glow quand l'input est focus */
+.searchbar-form:focus-within {
+  box-shadow:
+    0 0 0 1px rgba(248, 250, 252, 0.9),
+    0 14px 32px rgba(15, 23, 42, 0.9);
+  transform: translateY(-1px);
 }
 
 /* l’input */
@@ -34,7 +51,7 @@
   color: rgba(148, 163, 184, 0.9);
 }
 
-/* bouton loupe transparent (comme tu voulais) */
+/* bouton loupe transparent */
 .searchbar-button {
   width: 34px;
   height: 34px;
@@ -97,35 +114,6 @@
   font-size: 0.8rem;
   color: #9ca3af;
 }
-.searchbar {
-  position: relative;
-  width: 100%;
-  max-width: 520px; /* un peu plus large pour caser le toggle */
-}
-
-/* nouveau wrapper : input + toggle */
-.searchbar-top {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-/* le form garde son look, mais prend toute la place dispo */
-.searchbar-form {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  background: rgba(8, 10, 24, 0.92);
-  border-radius: 999px;
-  padding: 6px 10px;
-
-  border: 1px solid rgba(148, 163, 184, 0.7);
-  box-shadow:
-    0 0 0 1px rgba(0, 0, 0, 0.75),
-    0 12px 30px rgba(0, 0, 0, 0.7);
-}
 
 /* --- TOGGLE COMICS / CHARACTERS --- */
 
@@ -166,11 +154,17 @@
 /* Responsive : sur petit écran, on empile */
 @media (max-width: 640px) {
   .searchbar-top {
-    flex-direction: column;
+    flex-direction: row;
     align-items: stretch;
+    align-items: center;
   }
+.navsearch{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
   .search-toggle {
-    align-self: flex-end;
+    align-self: center;
   }
 }
