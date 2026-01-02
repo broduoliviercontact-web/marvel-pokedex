@@ -270,11 +270,13 @@ const Comics = () => {
   aria-label={fav ? "Retirer des favoris" : "Ajouter aux favoris"}
   onClick={(e) => {
     e.stopPropagation();
-    const next = toggleComicFavorite({
-      id,
-      title: comic.title,
-      thumbnail: comic.thumbnail,
-    });
+ const next = toggleComicFavorite({
+  id,
+  title: comic.title,
+  thumbnail: comic.thumbnail,
+  description: comic.description,
+});
+
     setFavoriteComicIds(new Set(next.map((x) => x.id)));
   }}
 >

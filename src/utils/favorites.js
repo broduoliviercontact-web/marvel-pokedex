@@ -25,7 +25,15 @@ export function toggleFavorite(hero) {
 
   const next = exists
     ? list.filter((x) => x.id !== hero.id)
-    : [{ id: hero.id, name: hero.name, thumbnail: hero.thumbnail }, ...list];
+    : [
+        {
+          id: hero.id,
+          name: hero.name,
+          thumbnail: hero.thumbnail,
+          description: hero.description || "",
+        },
+        ...list,
+      ];
 
   saveFavorites(next);
   return next;

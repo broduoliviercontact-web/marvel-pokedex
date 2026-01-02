@@ -20,7 +20,15 @@ export function toggleComicFavorite(comic) {
 
   const next = exists
     ? list.filter((x) => x.id !== comic.id)
-    : [{ id: comic.id, title: comic.title, thumbnail: comic.thumbnail }, ...list];
+    : [
+        {
+          id: comic.id,
+          title: comic.title,
+          thumbnail: comic.thumbnail,
+          description: comic.description || "",
+        },
+        ...list,
+      ];
 
   saveComicFavorites(next);
   return next;
