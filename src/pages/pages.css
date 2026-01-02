@@ -289,20 +289,21 @@ font-size: 100px;
 
 /* bouton Random / Réessayer : centré sous la carte */
 .random-button {
-  margin-top: 14px;
-  padding: 8px 18px;
-  border-radius: 999px;
-  border: 1px solid transparent;
-  background: #b22424;
-  color: #fff;
-  cursor: pointer;
-  font-size: 0.9rem;
-  align-self: center;
-  transition:
-    background-color 0.3s,
-    opacity 0.3s,
-    transform 0.2s,
-    box-shadow 0.2s;
+    position: relative;
+    padding: 8px 12px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    transition: all linear 0.2s;
+    cursor: pointer;
+    border-radius: 12px;
+
+    outline: none;
+background-color: transparent;
+    text-decoration: none;
+
 }
 
 .random-button:hover {
@@ -872,4 +873,31 @@ margin-right: 10px;
 .page {
   position: relative;
   z-index: 1; /* au-dessus du RouteSlider (z=0) */
+}
+
+
+/* Favoris: même style que .random-button, mais en icône */
+.fav-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 6;
+
+  /* on override le format "bouton texte" */
+  width: 42px;
+  height: 42px;
+  padding: 0 !important;
+  border-radius: 999px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-top: 0; /* override random-button */
+  font-size: 18px;
+  line-height: 1;
+}
+
+.fav-btn:hover {
+  transform: translateY(-1px);
 }

@@ -24,13 +24,18 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 300vw;
+  width: 400vw;
   height: 100vh;
 
   display: flex;
   flex-direction: row;
 
   transition: transform 0.45s cubic-bezier(0, 0, 0.21, 1);
+}
+
+.route-panel-favorites {
+  background-image: url("/backgrounds/marvel-bg-2.jpg"); /* mets l’image que tu veux */
+
 }
 
 /* Chaque panneau = une "page" pleine largeur */

@@ -3,14 +3,15 @@ import { useEffect, useRef } from "react";
 import "./RouteSlider.css";
 
 const getIndexFromPath = (pathname) => {
-  if (pathname.startsWith("/characters")) return 1;
-  if (pathname.startsWith("/comics")) return 2;
+  if (pathname.startsWith("/favorites")) return 1;
+  if (pathname.startsWith("/characters")) return 2;
+  if (pathname.startsWith("/comics")) return 3;
   return 0; // Home
 };
 
 const RouteSlider = () => {
   const location = useLocation();
-  const index = getIndexFromPath(location.pathname); // 0, 1, 2
+  const index = getIndexFromPath(location.pathname); // 0, 1, 2, 3
 
   // On garde l'index précédent pour savoir si on va "en avant" ou "en arrière"
   const prevIndexRef = useRef(index);
@@ -25,10 +26,16 @@ const RouteSlider = () => {
     prevIndexRef.current = index;
   }, [index]);
 
-  const offsetVw = -index * 100; // 0, -100, -200
+  const offsetVw = -index * 100; // 0, -100, -200, -300
 
   const dest =
-    index === 0 ? "home" : index === 1 ? "characters" : "comics";
+    index === 0
+      ? "home"
+      : index === 1
+      ? "favorites"
+      : index === 2
+      ? "characters"
+      : "comics";
 
   const outerClassName = [
     "route-slider-outer",
@@ -45,8 +52,9 @@ const RouteSlider = () => {
             transform: `translate3d(${offsetVw}vw, 0, 0)`,
           }}
         >
-          {/* Ordre : Home (0) → Characters (1) → Comics (2) */}
+          {/* Ordre : Home (0) → Favorites (1) → Characters (2) → Comics (3) */}
           <section className="route-panel route-panel-home" />
+          <section className="route-panel route-panel-favorites" />
           <section className="route-panel route-panel-characters" />
           <section className="route-panel route-panel-comics" />
         </div>

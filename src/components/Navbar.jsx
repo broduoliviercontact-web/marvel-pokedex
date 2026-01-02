@@ -19,6 +19,15 @@ const Navbar = () => {
 
           <div className="nav-links">
             <NavLink
+              to="/favorites"
+              className={({ isActive }) =>
+                "nav-link" + (isActive ? " nav-link--active" : "")
+              }
+            >
+              FAVORITES
+            </NavLink>
+
+            <NavLink
               to="/characters"
               className={({ isActive }) =>
                 "nav-link" + (isActive ? " nav-link--active" : "")
@@ -26,6 +35,7 @@ const Navbar = () => {
             >
               HEROES
             </NavLink>
+
             <NavLink
               to="/comics"
               className={({ isActive }) =>

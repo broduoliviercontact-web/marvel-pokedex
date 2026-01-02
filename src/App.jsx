@@ -8,7 +8,7 @@ import ScrollToTop from "./components/ScrollToTop";
 
 import RouteSlider from "./components/RouteSlider";
 import "./styles/pokemon-cards.css";
-
+import Favorites from "./pages/Favorites";
 function App() {
   return (
     <Router>
@@ -19,6 +19,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/characters" element={<Characters />} />
         <Route path="/comics" element={<Comics />} />
+        <Route path="/favorites" element={<Favorites />} />
+
       </Routes>
     </Router>
   );

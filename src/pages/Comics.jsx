@@ -5,6 +5,10 @@ import getImageUrl from "../utils/getImageUrl";
 import Pagination from "../components/Pagination";
 import "../pages/pages.css";
 import { API_BASE_URL } from "../config";
+import {
+  loadComicFavorites,
+  toggleComicFavorite,
+} from "../utils/favoritesComics";
 
 // Même effet holo + 3D que Home
 const handlePokemonMouseMove = (event) => {
@@ -34,9 +38,9 @@ const handlePokemonMouseLeave = (event) => {
 
 const Comics = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const nameParam = searchParams.get("name") || "";
+  const nameParam = searchParams.get("title") || "";
   const pageParam = parseInt(searchParams.get("page") || "1", 10);
-  const limitParam = parseInt(searchParams.get("limit") || "100", 10);
+  const limitParam = parseInt(searchParams.get("limit") || "20", 10);
 
   const page = Number.isNaN(pageParam) || pageParam < 1 ? 1 : pageParam;
   const limit = Number.isNaN(limitParam) || limitParam < 1 ? 20 : limitParam;
@@ -47,6 +51,10 @@ const Comics = () => {
   const [error, setError] = useState(null);
   const [total, setTotal] = useState(null);
   const [resultsLength, setResultsLength] = useState(0);
+
+  const [favoriteComicIds, setFavoriteComicIds] = useState(() => {
+    return new Set(loadComicFavorites().map((x) => x.id));
+  });
 
   const [randomComic, setRandomComic] = useState(null);
   const [isRandomLoading, setIsRandomLoading] = useState(false);
@@ -72,7 +80,7 @@ const Comics = () => {
       try {
         const skip = (page - 1) * limit;
         const params = { skip, limit };
-        if (nameParam.trim()) params.name = nameParam.trim();
+        if (nameParam.trim()) params.title = nameParam.trim();
 
         const response = await axios.get(`${API_BASE_URL}/comics`, {
           params,
@@ -102,7 +110,6 @@ const Comics = () => {
     };
 
     fetchComics();
-
     return () => controller.abort();
   }, [nameParam, page, limit]);
 
@@ -159,14 +166,15 @@ const Comics = () => {
     }
   };
 
+  // Charger une découverte automatique au montage
   useEffect(() => {
     fetchRandomComic();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const updateParams = (newPage, newLimit = limit, newName = nameParam) => {
+  const updateParams = (newPage, newLimit = limit, newTitle = nameParam) => {
     const params = {};
-    if (newName) params.name = newName;
+    if (newTitle) params.title = newTitle;
     if (newPage && newPage > 1) params.page = String(newPage);
     if (newLimit && newLimit !== 20) params.limit = String(newLimit);
     setSearchParams(params, { replace: false });
@@ -198,11 +206,32 @@ const Comics = () => {
 
   return (
     <main className="page page-comics">
+      {/* Barre de recherche */}
+      <form className="search-form" onSubmit={handleSubmit}>
+        <input
+          className="search-input"
+          type="text"
+          placeholder="Rechercher un comic..."
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+        />
+        <button className="search-button" type="submit">
+          Search
+        </button>
+        <button className="search-button secondary" type="button" onClick={handleReset}>
+          Reset
+        </button>
+      </form>
+
       {/* LISTE DES COMICS – style Pokémon */}
       <div className="cards">
         {comics.map((comic) => {
-          const key = comic._id || comic.id || comic.title;
+          const id = comic._id || comic.id || comic.title;
+          const fav = favoriteComicIds.has(id);
+
+          const key = id;
           const thumbnail = comic.thumbnail || {};
+
           return (
             <article
               key={key}
@@ -212,6 +241,8 @@ const Comics = () => {
               <div className="tilt-card" data-tilt>
                 {/* FRONT */}
                 <div className="tilt-card-front">
+              
+
                   {thumbnail.path && thumbnail.extension ? (
                     <div
                       className="pokemon-card pokemon-card--small"
@@ -233,6 +264,23 @@ const Comics = () => {
 
                 {/* BACK */}
                 <div className="tilt-card-back">
+                <button
+  type="button"
+  className={"random-button fav-btn" + (fav ? " fav-btn--active" : "")}
+  aria-label={fav ? "Retirer des favoris" : "Ajouter aux favoris"}
+  onClick={(e) => {
+    e.stopPropagation();
+    const next = toggleComicFavorite({
+      id,
+      title: comic.title,
+      thumbnail: comic.thumbnail,
+    });
+    setFavoriteComicIds(new Set(next.map((x) => x.id)));
+  }}
+>
+  {fav ? "❤️" : "🤍"}
+</button>
+
                   {thumbnail.path && thumbnail.extension ? (
                     <div
                       className="pokemon-card pokemon-card--small"
@@ -249,9 +297,7 @@ const Comics = () => {
                     </div>
                   ) : null}
 
-                  <h3 className="card-title card-title-back">
-                    {comic.title}
-                  </h3>
+                  <h3 className="card-title card-title-back">{comic.title}</h3>
                   {comic.description?.trim() && (
                     <p className="card-desc">{comic.description}</p>
                   )}
@@ -262,7 +308,7 @@ const Comics = () => {
         })}
       </div>
 
-      {/* DÉCOUVERTE DU JOUR – même style que Home */}
+      {/* DÉCOUVERTE DU JOUR */}
       <section className="daily-discovery">
         {isRandomLoading ? (
           <p className="loading">Chargement...</p>
@@ -275,8 +321,7 @@ const Comics = () => {
                 onClick={() => handleCardClick(randomComic)}
               >
                 <div className="tilt-card-front">
-                  {randomComic.thumbnail?.path &&
-                  randomComic.thumbnail?.extension ? (
+                  {randomComic.thumbnail?.path && randomComic.thumbnail?.extension ? (
                     <div
                       className="pokemon-card pokemon-card--small"
                       onMouseMove={handlePokemonMouseMove}
@@ -294,8 +339,7 @@ const Comics = () => {
                   <h3 className="card-title">{randomComic.title}</h3>
                 </div>
                 <div className="tilt-card-back">
-                  {randomComic.thumbnail?.path &&
-                  randomComic.thumbnail?.extension ? (
+                  {randomComic.thumbnail?.path && randomComic.thumbnail?.extension ? (
                     <div
                       className="pokemon-card pokemon-card--small"
                       onMouseMove={handlePokemonMouseMove}
@@ -310,18 +354,14 @@ const Comics = () => {
                       </div>
                     </div>
                   ) : null}
-                  <h3 className="card-title card-title-back">
-                    {randomComic.title}
-                  </h3>
+                  <h3 className="card-title card-title-back">{randomComic.title}</h3>
                   {randomComic.description?.trim() && (
-                    <p className="card-desc">
-                      {randomComic.description}
-                    </p>
+                    <p className="card-desc">{randomComic.description}</p>
                   )}
                 </div>
               </div>
               <button onClick={fetchRandomComic} className="random-button">
-                RANDOM COMICS
+                Découvrir un autre comic
               </button>
             </article>
           </div>
@@ -337,7 +377,7 @@ const Comics = () => {
         )}
       </section>
 
-      {/* OVERLAY DÉTAILLÉ – grande carte holo */}
+      {/* FICHE DÉTAILLÉE */}
       {selectedComic && (
         <div className="detail-overlay" onClick={handleCloseDetail}>
           <div
@@ -376,13 +416,9 @@ const Comics = () => {
               </div>
 
               <div className="detail-content">
-                <h2 className="detail-title">
-                  {selectedComic.title || "Sans titre"}
-                </h2>
+                <h2 className="detail-title">{selectedComic.title || "Sans titre"}</h2>
                 {selectedComic.description?.trim() && (
-                  <p className="detail-desc">
-                    {selectedComic.description}
-                  </p>
+                  <p className="detail-desc">{selectedComic.description}</p>
                 )}
               </div>
             </div>

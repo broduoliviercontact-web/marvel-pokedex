@@ -5,6 +5,7 @@ import getImageUrl from "../utils/getImageUrl";
 import Pagination from "../components/Pagination";
 import "../pages/pages.css";
 import { API_BASE_URL } from "../config";
+import { loadFavorites, toggleFavorite } from "../utils/favorites";
 
 const Characters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -21,6 +22,10 @@ const Characters = () => {
   const [error, setError] = useState(null);
   const [total, setTotal] = useState(null);
   const [resultsLength, setResultsLength] = useState(0);
+
+  const [favoriteIds, setFavoriteIds] = useState(() => {
+    return new Set(loadFavorites().map((x) => x.id));
+  });
 
   const [randomCharacter, setRandomCharacter] = useState(null);
   const [isRandomLoading, setIsRandomLoading] = useState(false);
@@ -202,8 +207,12 @@ const Characters = () => {
       {/* LISTE DES PERSONNAGES – version Pokémon */}
       <div className="cards">
         {characters.map((character) => {
-          const key = character._id || character.id || character.name;
+          const id = character._id || character.id || character.name;
+          const fav = favoriteIds.has(id);
+
+          const key = id;
           const thumbnail = character.thumbnail || {};
+
           return (
             <article
               key={key}
@@ -213,6 +222,8 @@ const Characters = () => {
               <div className="tilt-card" data-tilt>
                 {/* FRONT */}
                 <div className="tilt-card-front">
+                  
+
                   {thumbnail.path && thumbnail.extension ? (
                     <div
                       className="pokemon-card pokemon-card--small"
@@ -240,6 +251,23 @@ const Characters = () => {
                       onMouseMove={handlePokemonMouseMove}
                       onMouseLeave={handlePokemonMouseLeave}
                     >
+            <button
+  type="button"
+  className={"random-button fav-btn" + (fav ? " fav-btn--active" : "")}
+  aria-label={fav ? "Retirer des favoris" : "Ajouter aux favoris"}
+  onClick={(e) => {
+    e.stopPropagation();
+    const next = toggleFavorite({
+      id,
+      name: character.name,
+      thumbnail: character.thumbnail,
+    });
+    setFavoriteIds(new Set(next.map((x) => x.id)));
+  }}
+>
+  {fav ? "❤️" : "🤍"}
+</button>
+
                       <div className="pokemon-card-inner">
                         <img
                           className="pokemon-card-img"
@@ -319,10 +347,7 @@ const Characters = () => {
                   )}
                 </div>
               </div>
-              <button
-                onClick={fetchRandomCharacter}
-                className="random-button"
-              >
+              <button onClick={fetchRandomCharacter} className="random-button">
                 Découvrir quelqu’un d’autre
               </button>
             </article>
@@ -332,10 +357,7 @@ const Characters = () => {
             <p className="empty">
               Impossible de récupérer un personnage aléatoire pour le moment.
             </p>
-            <button
-              onClick={fetchRandomCharacter}
-              className="random-button"
-            >
+            <button onClick={fetchRandomCharacter} className="random-button">
               Réessayer
             </button>
           </div>
@@ -385,9 +407,7 @@ const Characters = () => {
                   {selectedCharacter.name || "Sans nom"}
                 </h2>
                 {selectedCharacter.description?.trim() && (
-                  <p className="detail-desc">
-                    {selectedCharacter.description}
-                  </p>
+                  <p className="detail-desc">{selectedCharacter.description}</p>
                 )}
               </div>
             </div>
