@@ -176,6 +176,12 @@ const Comics = () => {
     fetchRandomComic();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+useEffect(() => {
+  if (selectedComic) document.body.classList.add("modal-open");
+  else document.body.classList.remove("modal-open");
+
+  return () => document.body.classList.remove("modal-open");
+}, [selectedComic]);
 
   const updateParams = (newPage, newLimit = limit, newTitle = nameParam) => {
     const params = {};
@@ -211,26 +217,7 @@ const Comics = () => {
 
   return (
     <main className="page page-comics">
-      {/* Barre de recherche */}
-      <form className="search-form" onSubmit={handleSubmit}>
-        <input
-          className="search-input"
-          type="text"
-          placeholder="Rechercher un comic..."
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
-        />
-        <button className="search-button" type="submit">
-          Search
-        </button>
-        <button
-          className="search-button secondary"
-          type="button"
-          onClick={handleReset}
-        >
-          Reset
-        </button>
-      </form>
+      
 
       {/* LISTE DES COMICS – style Pokémon */}
       <div className="cards">
@@ -417,8 +404,10 @@ const Comics = () => {
                     className="pokemon-card pokemon-card--holo card card--swsh card--holo"
                     onMouseMove={handlePokemonMouseMove}
                     onMouseLeave={handlePokemonMouseLeave}
-                    onPointerDown={requestPermission}
-                    onTouchStart={requestPermission}
+       onClick={(e) => {
+  e.stopPropagation();
+  requestPermission();
+}}
                   >
                     <div className="pokemon-card-inner">
                       {selectedComic.thumbnail?.path &&

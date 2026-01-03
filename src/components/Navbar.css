@@ -184,3 +184,10 @@
     flex: none;
   }
 }
+
+body.modal-open .navbar {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-12px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}

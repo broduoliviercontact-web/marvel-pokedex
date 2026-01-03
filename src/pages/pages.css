@@ -326,34 +326,47 @@ background-color: transparent;
    Overlay de détail (card en grand)
    =========================== */
 
+/* ===========================
+   Overlay de détail (card en grand)
+   =========================== */
+
 .detail-overlay {
   position: fixed;
   inset: 0;
   z-index: 999;
+
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;              /* ✅ center */
   padding: 16px;
+
+  /* ✅ le scroll se fait ici si besoin */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+
   background:
     radial-gradient(circle at top, rgba(230, 36, 41, 0.35), transparent 55%),
     rgba(3, 7, 18, 0.94);
   backdrop-filter: blur(12px);
-   align-items: flex-start;
 }
 
 .detail-overlay-inner {
-  margin-top: 190px;
+  margin-top: 0;                    /* ✅ plus de 190px */
   position: relative;
   width: min(900px, 100%);
-  max-height: 90vh; /* un peu plus haut si possible */
+
+  /* ✅ hauteur maximale dans l’écran */
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+
   background:
     radial-gradient(circle at 0% 0%, rgba(248, 250, 252, 0.06), transparent 55%),
     linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(30, 64, 175, 0.85));
   border-radius: 18px;
   border: 1px solid rgba(148, 163, 184, 0.5);
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9);
-  overflow-y: auto;        /* ✅ scroll vertical si besoin */
-  overflow-x: hidden;      /* on garde caché à l’horizontale */
   animation: detail-zoom-in 0.28s ease-out;
 }
 
@@ -961,4 +974,16 @@ justify-content: center;
 .pokemon-card--holo {
   will-change: transform;
   transform-style: preserve-3d;
+}
+
+.detail-overlay-inner {
+  -webkit-overflow-scrolling: touch; /* ✅ scroll fluide iOS */
+}
+
+.pokemon-card--holo {
+  touch-action: pan-y; /* ✅ laisse le scroll vertical même si la carte capte des events */
+}
+
+body.modal-open {
+  overflow: hidden;
 }

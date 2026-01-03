@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { loadFavorites, toggleFavorite } from "../utils/favorites";
 import {
   loadComicFavorites,
@@ -50,6 +50,15 @@ export default function Favorites() {
 
   // Modal (héros ou comic)
   const [selected, setSelected] = useState(null);
+
+  // ✅ cache la navbar quand la modal est ouverte
+  useEffect(() => {
+    if (selected) document.body.classList.add("modal-open");
+    else document.body.classList.remove("modal-open");
+
+    return () => document.body.classList.remove("modal-open");
+  }, [selected]);
+
   const closeDetail = () => setSelected(null);
 
   const removeHero = (fav) => {
@@ -85,7 +94,7 @@ export default function Favorites() {
 
   return (
     <main className="page page-characters">
-      <h1 className="page-title">Favorites</h1>
+   
 
       {/* HEROES */}
       {heroFavorites.length > 0 && (
@@ -271,18 +280,18 @@ export default function Favorites() {
         </>
       )}
 
-      {/* MODAL style Pokémon */}
+      {/* MODAL */}
       {selected && (
         <div className="detail-overlay" onClick={closeDetail}>
           <div
             className="detail-overlay-inner"
-            onClick={(event) => event.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
           >
             <button
               className="detail-close"
               type="button"
               onClick={closeDetail}
-              aria-label="Fermer la fiche détaillée"
+              aria-label="Fermer"
             >
               ×
             </button>
@@ -296,16 +305,12 @@ export default function Favorites() {
                     onMouseLeave={handlePokemonMouseLeave}
                   >
                     <div className="pokemon-card-inner">
-                      {selected.data.thumbnail?.path &&
-                      selected.data.thumbnail?.extension ? (
+                      {selected.data?.thumbnail?.path &&
+                      selected.data?.thumbnail?.extension ? (
                         <img
                           className="pokemon-card-img"
                           src={getImageUrl(selected.data.thumbnail)}
-                          alt={
-                            selected.type === "hero"
-                              ? selected.data.name
-                              : selected.data.title
-                          }
+                          alt={selected.type === "hero" ? selected.data.name : selected.data.title}
                         />
                       ) : null}
                     </div>
@@ -315,12 +320,9 @@ export default function Favorites() {
 
               <div className="detail-content">
                 <h2 className="detail-title">
-                  {selected.type === "hero"
-                    ? selected.data.name || "Sans nom"
-                    : selected.data.title || "Sans titre"}
+                  {selected.type === "hero" ? selected.data.name : selected.data.title}
                 </h2>
-
-                {selected.data.description?.trim() && (
+                {selected.data?.description?.trim() && (
                   <p className="detail-desc">{selected.data.description}</p>
                 )}
               </div>

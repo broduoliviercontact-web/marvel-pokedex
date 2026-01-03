@@ -70,7 +70,12 @@ const Characters = () => {
       document.body.classList.remove("bg-characters");
     };
   }, []);
+useEffect(() => {
+  if (selectedCharacter) document.body.classList.add("modal-open");
+  else document.body.classList.remove("modal-open");
 
+  return () => document.body.classList.remove("modal-open");
+}, [selectedCharacter]);
   // Récupération des personnages
   useEffect(() => {
     const controller = new AbortController();
@@ -397,8 +402,10 @@ const Characters = () => {
                     className="pokemon-card pokemon-card--holo card card--swsh card--holo"
                     onMouseMove={handlePokemonMouseMove}
                     onMouseLeave={handlePokemonMouseLeave}
-                    onPointerDown={requestPermission}
-                    onTouchStart={requestPermission}
+              onClick={(e) => {
+  e.stopPropagation();
+  requestPermission();
+}}
                   >
                     <div className="pokemon-card-inner">
                       {selectedCharacter.thumbnail?.path &&
