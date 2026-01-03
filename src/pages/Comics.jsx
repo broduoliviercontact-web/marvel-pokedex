@@ -218,7 +218,11 @@ const Comics = () => {
         <button className="search-button" type="submit">
           Search
         </button>
-        <button className="search-button secondary" type="button" onClick={handleReset}>
+        <button
+          className="search-button secondary"
+          type="button"
+          onClick={handleReset}
+        >
           Reset
         </button>
       </form>

@@ -25,18 +25,18 @@ const SearchBar = () => {
     }
   }, [location.pathname]);
 
-  // Synchroniser le champ avec ?name=
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const nameParam = params.get("name") || "";
-    setQuery(nameParam);
-  }, [location.search]);
-
   // Quand on change de mode, on vide les suggestions
   useEffect(() => {
     setSuggestions([]);
     setIsOpen(false);
   }, [mode]);
+
+  // Synchroniser le champ avec le bon paramètre d'URL selon le mode
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const paramName = mode === "characters" ? "name" : "title";
+    setQuery(params.get(paramName) || "");
+  }, [location.search, mode]);
 
   // Autocomplete avec debounce + filtrage front
   useEffect(() => {
@@ -56,10 +56,11 @@ const SearchBar = () => {
         setIsLoading(true);
 
         const endpoint = mode === "characters" ? "/characters" : "/comics";
+        const paramName = mode === "characters" ? "name" : "title";
 
         const response = await axios.get(`${API_BASE_URL}${endpoint}`, {
           params: {
-            name: trimmed,
+            [paramName]: trimmed,
             limit: 100,
             skip: 0,
           },
@@ -117,7 +118,8 @@ const SearchBar = () => {
     if (!trimmed) return;
 
     const path = mode === "characters" ? "/characters" : "/comics";
-    navigate(`${path}?name=${encodeURIComponent(trimmed)}`);
+    const paramName = mode === "characters" ? "name" : "title";
+    navigate(`${path}?${paramName}=${encodeURIComponent(trimmed)}`);
     setIsOpen(false);
   };
 

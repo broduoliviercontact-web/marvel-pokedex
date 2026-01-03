@@ -901,3 +901,64 @@ margin-right: 10px;
 .fav-btn:hover {
   transform: translateY(-1px);
 }
+
+/* ===========================
+   Ombre tournante (effet "page")
+   =========================== */
+
+/* Important : le wrapper doit être positionné */
+.card {
+  position: relative;
+}
+
+/* Ombre/halo derrière la carte */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: -18px;             /* déborde un peu autour */
+  border-radius: 18px;
+  pointer-events: none;
+
+  /* "ombre" stylée qui tourne */
+  background: conic-gradient(
+    from 0deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.22) 18%,
+    rgba(0, 0, 0, 0) 40%,
+    rgba(0, 0, 0, 0.18) 65%,
+    rgba(0, 0, 0, 0) 100%
+  );
+
+  filter: blur(14px);
+  opacity: 0;
+  transform: rotate(0deg) scale(0.98);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+
+  z-index: 0; /* derrière */
+}
+
+/* S'assure que la carte est au-dessus du halo */
+.card > .tilt-card {
+  position: relative;
+  z-index: 1;
+}
+
+/* Au survol : on affiche + on lance la rotation */
+.card:hover::before {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+  animation: card-shadow-spin 2.2s linear infinite;
+}
+
+@keyframes card-shadow-spin {
+  to {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+/* Respecte les préférences d’accessibilité */
+@media (prefers-reduced-motion: reduce) {
+  .card:hover::before {
+    animation: none;
+  }
+}
