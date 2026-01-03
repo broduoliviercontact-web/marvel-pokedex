@@ -1,3 +1,10 @@
+
+/* ---- Global responsive safety net ---- */
+* { box-sizing: border-box; }
+img, video { max-width: 100%; height: auto; }
+html, body { overflow-x: hidden; }
+
+
 /* ===========================
    Layout général des pages
    =========================== */
@@ -78,10 +85,9 @@ font-size: 100px;
   justify-content: center;
   gap: 10px;
 
-  /* espace sur les côtés + largeur max */
   max-width: 1500px;
   margin: 0 auto;
-  padding: 0 40px;
+  padding: 0 clamp(12px, 4vw, 40px); /* ✅ au lieu de 40px fixe */
 }
 /* Écrans moyens : 4 par ligne */
 @media (min-width: 1024px) {
@@ -89,7 +95,10 @@ font-size: 100px;
     flex: 1 1 calc(25% - 24px);
   }
 }
-
+.cards .card {
+  flex: 1 1 260px;           /* ✅ 1 colonne mobile, 2/3 en tablette, etc. */
+  max-width: 320px;
+}
 
 /* wrapper d'une card (article) */
 .card {
@@ -708,16 +717,21 @@ justify-content: center;
 
 
 
-.home-hero-logo-img {
-  display: flex;
-  width: 800px;
-  height: 300px;
-  border-radius: inherit;
-  object-fit: cover;
-  background: #edebeb;
-  border: 2px solid #000000;
-}
 
+.home-hero-logo-img {
+  display: block;
+  width: min(520px, 100%);     /* ✅ responsive */
+  height: auto;               /* ✅ pas de crop */
+  max-height: 220px;          /* ✅ optionnel, pour éviter un logo trop grand */
+  object-fit: contain;        /* ✅ au lieu de cover */
+  background: transparent;    /* (si tu veux garder un fond, enlève ça) */
+  border: none;               /* (si tu veux garder le cadre, enlève ça) */
+}
+.home-hero-logo {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
 .home-hero-text {
   display: flex;
 
@@ -813,32 +827,13 @@ justify-content: center;
   
 }
 
-
-@media (max-width: 500px) {
-  .home-hero-logo {
-    width: 64px;
-    height: 64px;
-        object-fit: cover;
-    background: #edebeb;
-    border: 2px solid #000000;
-    
-    align-self: center;
-margin-right: 10px;
-  }
-  
-}
-
 @media (max-width: 800px) {
   .home-hero-logo-img {
-    width: 450px;
-    display: flex;
-    height: 200px;
-    object-fit: cover;
-    background: #edebeb;
-    border: 2px solid #000000;
-
+    width: min(420px, 100%);
+    max-height: 120px;
   }
 }
+
 
 /* Anim d'apparition des cartes */
 @keyframes card-fade-in-up {
@@ -961,4 +956,9 @@ margin-right: 10px;
   .card:hover::before {
     animation: none;
   }
+}
+
+.pokemon-card--holo {
+  will-change: transform;
+  transform-style: preserve-3d;
 }

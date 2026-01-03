@@ -1,11 +1,12 @@
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import getImageUrl from "../utils/getImageUrl";
 import Pagination from "../components/Pagination";
 import "../pages/pages.css";
 import { API_BASE_URL } from "../config";
 import { loadFavorites, toggleFavorite } from "../utils/favorites";
+import useGyroTilt from "../utils/useGyroTilt";
 
 const Characters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -30,6 +31,10 @@ const Characters = () => {
   const [randomCharacter, setRandomCharacter] = useState(null);
   const [isRandomLoading, setIsRandomLoading] = useState(false);
   const [selectedCharacter, setSelectedCharacter] = useState(null);
+
+  // ✅ Gyro tilt sur la carte holo de la modal
+  const holoRef = useRef(null);
+  const { requestPermission } = useGyroTilt(holoRef, !!selectedCharacter);
 
   // Shine + Tilt Pokémon (même logique que Home & Comics)
   const handlePokemonMouseMove = (event) => {
@@ -222,8 +227,6 @@ const Characters = () => {
               <div className="tilt-card" data-tilt>
                 {/* FRONT */}
                 <div className="tilt-card-front">
-                  
-
                   {thumbnail.path && thumbnail.extension ? (
                     <div
                       className="pokemon-card pokemon-card--small"
@@ -251,23 +254,28 @@ const Characters = () => {
                       onMouseMove={handlePokemonMouseMove}
                       onMouseLeave={handlePokemonMouseLeave}
                     >
-            <button
-  type="button"
-  className={"random-button fav-btn" + (fav ? " fav-btn--active" : "")}
-  aria-label={fav ? "Retirer des favoris" : "Ajouter aux favoris"}
-  onClick={(e) => {
-    e.stopPropagation();
-const next = toggleFavorite({
-  id,
-  name: character.name,
-  thumbnail: character.thumbnail,
-  description: character.description,
-});
-    setFavoriteIds(new Set(next.map((x) => x.id)));
-  }}
->
-  {fav ? "❤️" : "🤍"}
-</button>
+                      <button
+                        type="button"
+                        className={
+                          "random-button fav-btn" +
+                          (fav ? " fav-btn--active" : "")
+                        }
+                        aria-label={
+                          fav ? "Retirer des favoris" : "Ajouter aux favoris"
+                        }
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const next = toggleFavorite({
+                            id,
+                            name: character.name,
+                            thumbnail: character.thumbnail,
+                            description: character.description,
+                          });
+                          setFavoriteIds(new Set(next.map((x) => x.id)));
+                        }}
+                      >
+                        {fav ? "❤️" : "🤍"}
+                      </button>
 
                       <div className="pokemon-card-inner">
                         <img
@@ -385,9 +393,12 @@ const next = toggleFavorite({
               <div className="detail-media holo-enabled">
                 <div className="pokemon-card-wrapper">
                   <div
+                    ref={holoRef}
                     className="pokemon-card pokemon-card--holo card card--swsh card--holo"
                     onMouseMove={handlePokemonMouseMove}
                     onMouseLeave={handlePokemonMouseLeave}
+                    onPointerDown={requestPermission}
+                    onTouchStart={requestPermission}
                   >
                     <div className="pokemon-card-inner">
                       {selectedCharacter.thumbnail?.path &&

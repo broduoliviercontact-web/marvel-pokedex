@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import getImageUrl from "../utils/getImageUrl";
 import Pagination from "../components/Pagination";
@@ -9,6 +9,7 @@ import {
   loadComicFavorites,
   toggleComicFavorite,
 } from "../utils/favoritesComics";
+import useGyroTilt from "../utils/useGyroTilt";
 
 // Même effet holo + 3D que Home
 const handlePokemonMouseMove = (event) => {
@@ -59,6 +60,10 @@ const Comics = () => {
   const [randomComic, setRandomComic] = useState(null);
   const [isRandomLoading, setIsRandomLoading] = useState(false);
   const [selectedComic, setSelectedComic] = useState(null);
+
+  // ✅ Gyro tilt sur la carte holo de la modal
+  const holoRef = useRef(null);
+  const { requestPermission } = useGyroTilt(holoRef, !!selectedComic);
 
   // Fond de page
   useEffect(() => {
@@ -245,8 +250,6 @@ const Comics = () => {
               <div className="tilt-card" data-tilt>
                 {/* FRONT */}
                 <div className="tilt-card-front">
-              
-
                   {thumbnail.path && thumbnail.extension ? (
                     <div
                       className="pokemon-card pokemon-card--small"
@@ -268,24 +271,27 @@ const Comics = () => {
 
                 {/* BACK */}
                 <div className="tilt-card-back">
-                <button
-  type="button"
-  className={"random-button fav-btn" + (fav ? " fav-btn--active" : "")}
-  aria-label={fav ? "Retirer des favoris" : "Ajouter aux favoris"}
-  onClick={(e) => {
-    e.stopPropagation();
- const next = toggleComicFavorite({
-  id,
-  title: comic.title,
-  thumbnail: comic.thumbnail,
-  description: comic.description,
-});
-
-    setFavoriteComicIds(new Set(next.map((x) => x.id)));
-  }}
->
-  {fav ? "❤️" : "🤍"}
-</button>
+                  <button
+                    type="button"
+                    className={
+                      "random-button fav-btn" + (fav ? " fav-btn--active" : "")
+                    }
+                    aria-label={
+                      fav ? "Retirer des favoris" : "Ajouter aux favoris"
+                    }
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      const next = toggleComicFavorite({
+                        id,
+                        title: comic.title,
+                        thumbnail: comic.thumbnail,
+                        description: comic.description,
+                      });
+                      setFavoriteComicIds(new Set(next.map((x) => x.id)));
+                    }}
+                  >
+                    {fav ? "❤️" : "🤍"}
+                  </button>
 
                   {thumbnail.path && thumbnail.extension ? (
                     <div
@@ -327,7 +333,8 @@ const Comics = () => {
                 onClick={() => handleCardClick(randomComic)}
               >
                 <div className="tilt-card-front">
-                  {randomComic.thumbnail?.path && randomComic.thumbnail?.extension ? (
+                  {randomComic.thumbnail?.path &&
+                  randomComic.thumbnail?.extension ? (
                     <div
                       className="pokemon-card pokemon-card--small"
                       onMouseMove={handlePokemonMouseMove}
@@ -345,7 +352,8 @@ const Comics = () => {
                   <h3 className="card-title">{randomComic.title}</h3>
                 </div>
                 <div className="tilt-card-back">
-                  {randomComic.thumbnail?.path && randomComic.thumbnail?.extension ? (
+                  {randomComic.thumbnail?.path &&
+                  randomComic.thumbnail?.extension ? (
                     <div
                       className="pokemon-card pokemon-card--small"
                       onMouseMove={handlePokemonMouseMove}
@@ -360,7 +368,9 @@ const Comics = () => {
                       </div>
                     </div>
                   ) : null}
-                  <h3 className="card-title card-title-back">{randomComic.title}</h3>
+                  <h3 className="card-title card-title-back">
+                    {randomComic.title}
+                  </h3>
                   {randomComic.description?.trim() && (
                     <p className="card-desc">{randomComic.description}</p>
                   )}
@@ -403,9 +413,12 @@ const Comics = () => {
               <div className="detail-media holo-enabled">
                 <div className="pokemon-card-wrapper">
                   <div
+                    ref={holoRef}
                     className="pokemon-card pokemon-card--holo card card--swsh card--holo"
                     onMouseMove={handlePokemonMouseMove}
                     onMouseLeave={handlePokemonMouseLeave}
+                    onPointerDown={requestPermission}
+                    onTouchStart={requestPermission}
                   >
                     <div className="pokemon-card-inner">
                       {selectedComic.thumbnail?.path &&
@@ -422,7 +435,9 @@ const Comics = () => {
               </div>
 
               <div className="detail-content">
-                <h2 className="detail-title">{selectedComic.title || "Sans titre"}</h2>
+                <h2 className="detail-title">
+                  {selectedComic.title || "Sans titre"}
+                </h2>
                 {selectedComic.description?.trim() && (
                   <p className="detail-desc">{selectedComic.description}</p>
                 )}
